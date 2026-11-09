@@ -1,0 +1,39 @@
+{
+  "name": "dsh-notify",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Windows desktop toast when a long DSH turn finishes: answer summary, elapsed time, completion reason, and a click that focuses DSH.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Suo Jianfei",
+  "homepage": "https://github.com/FindSunny/dsh-plugins/tree/main/dsh-notify",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FindSunny/dsh-plugins.git",
+    "directory": "dsh-notify"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.png",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.png",
+    "README.md"
+  ],
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.4"
+  },
+  "bundledDependencies": [
+    "@deepseek-ai/schemastery"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

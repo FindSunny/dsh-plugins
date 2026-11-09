@@ -1,0 +1,5 @@
+# 人民万岁 theme: mount the dsh-theme-mao host plugin, which injects the
+# photo background + clean light palette into every index response.
+- insert:
+    - id: theme-mao
+      name: dsh-theme-mao

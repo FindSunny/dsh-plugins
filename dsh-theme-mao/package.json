@@ -1,0 +1,25 @@
+{
+  "name": "dsh-theme-mao",
+  "version": "0.2.0",
+  "description": "People, People (Mao) theme for DeepSeek Harness: photo background and a clean light palette.",
+  "private": true,
+  "license": "MIT",
+  "author": "Suo Jianfei",
+  "homepage": "https://github.com/FindSunny/dsh-plugins/tree/main/dsh-theme-mao",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FindSunny/dsh-plugins.git",
+    "directory": "dsh-theme-mao"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "theme.css",
+    "cordis.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Desktop Notifications",
+    "description": "Shows a Windows toast when a long turn finishes, with the elapsed time and whether it completed, was interrupted, or failed."
+  }
+}

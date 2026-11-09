@@ -1,0 +1,23 @@
+# dsh-notify bundle patch: mount the desktop-notification Host plugin.
+# The values below are the base layer; anything the user changes in
+# Settings (or through /notify) is stored in the profile settings document
+# and layered on top, live.
+- insert:
+    - id: dsh-notify
+      name: dsh-notify
+      config:
+        enabled: true
+        thresholdSeconds: 60
+        # 通知里附的回答摘要字数上限（0 = 不附摘要）
+        summaryChars: 90
+        # toast = WinRT 吐司（默认，弹横幅 + 进通知中心）；balloon = 托盘气泡（备用，不依赖 AUMID）
+        channel: toast
+        sound: true
+        # 吐司左侧显示插件自带图标（icon.png）
+        showIcon: true
+        notifyOnError: true
+        notifyOnAborted: false
+        notifySubagents: false
+        # 必须是 DSH 注册过的 AUMID；写 "DSH" 会收下通知但不弹横幅（本机实测）
+        appId: com.deepseek.dsh
+        debug: false
