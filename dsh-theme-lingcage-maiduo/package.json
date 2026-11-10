@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-lingcage-maiduo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Ling Cage: Maiduo theme for DeepSeek Harness — warm rose/amber palette over a photo sidebar portrait and a seamlessly looping background video, plus an original fallback illustration.",
   "private": true,
   "license": "MIT",
@@ -17,8 +17,14 @@
     "boot.js",
     "fit-sidebar.js",
     "theme.css",
+    "theme.local.css",
+    "theme.local.extra.css",
     "cordis.patch.yml",
-    "assets/background.svg"
+    "README.md",
+    "assets/background.svg",
+    "assets/background.local.jpg",
+    "assets/background.local.mp4",
+    "assets/background.loop.mp4"
   ],
   "dsh": {
     "bundle": {
