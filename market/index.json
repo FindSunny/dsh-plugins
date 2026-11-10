@@ -70,7 +70,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
+            "commit": "ca6fe66a95fe8fd6390116812f2924fd3f50be39",
             "path": "dsh-notify"
           }
         }
@@ -107,7 +107,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
+            "commit": "ca6fe66a95fe8fd6390116812f2924fd3f50be39",
             "path": "dsh-theme-mao"
           }
         }
@@ -141,12 +141,12 @@
       },
       "versions": [
         {
-          "version": "0.2.0",
-          "publishTimestamp": 1794270410,
+          "version": "0.2.1",
+          "publishTimestamp": 1794270460,
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
+            "commit": "ca6fe66a95fe8fd6390116812f2924fd3f50be39",
             "path": "dsh-theme-lingcage-maiduo"
           }
         }
