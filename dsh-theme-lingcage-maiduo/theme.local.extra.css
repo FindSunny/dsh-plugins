@@ -127,3 +127,18 @@ body[data-ds-dark-theme] {
   background: rgba(224, 147, 154, 0.30) !important;
   color: rgb(250, 244, 240) !important;
 }
+
+/* 正文在动态背景上更立得住：文字加一层极轻的暗色描边（不是阴影投射，只约 1px 扩散）。
+   视频层在 UI 之上，无法靠加亮面板提对比，文字端是最有效的一档。 */
+body,
+body[data-ds-dark-theme] {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+/* 代码块里的文字不需要描边（底色本身是不透明近黑，加了会发糊） */
+pre,
+pre *,
+code,
+code * {
+  text-shadow: none !important;
+}

@@ -69,19 +69,25 @@ function pushThemeStyle(table) {
 /**
  * 视频元素的标记：先作为 html 行插入（不依赖脚本），再由 boot.js 接管播放。
  * 素材是**横屏 1920×1080**（ffmpeg 实测），构图上人物在右半边、她伸手的"手"在中偏左，
- * 左边是樱花。遮罩只挡住最左 26%（那里基本是樱花），再往右快速淡入，保证手也被看到。
+ * 左边是樱花。遮罩按**像素**（只挡靠近侧栏的 ~200px）—— 之前按百分比算，窄窗口下 cover
+ * 只留画面最右一条，她正好被那前 26% 的透明区吃掉，于是"只有大窗口才看得到"。
  * 放在最上层、低透明度、不吃点击（放负 z-index 会被正文面板整个盖住，实测）。
  */
 const VIDEO_HTML =
   '<video data-dsh-maiduo autoplay muted loop playsinline preload="auto" aria-hidden="true" src="' +
   VIDEO_ROUTE +
-  '" style="position:fixed;top:0;right:0;bottom:0;left:var(--dsh-maiduo-strip,248px);' +
-  'object-fit:cover;object-position:right center;z-index:2147483000;pointer-events:none;' +
-  'opacity:var(--dsh-maiduo-video-opacity,.42);' +
-  '-webkit-mask-image:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 26%,' +
-  'rgba(0,0,0,.55) 50%,rgba(0,0,0,.95) 100%);' +
-  'mask-image:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 26%,' +
-  'rgba(0,0,0,.55) 50%,rgba(0,0,0,.95) 100%);' +
+  // ⚠️ <video> 是替换元素：只给四边定位、不写宽高时，浏览器按**固有尺寸**排版（实测 1920×1080），
+  // right/bottom 被忽略 → 元素比窗口还宽，窗口一窄就只剩画面左侧、人被挤到窗口外。
+  // 所以必须显式给出 width/height。
+  '" style="position:fixed;top:0;height:100vh;left:var(--dsh-maiduo-strip,248px);' +
+  'width:calc(100vw - var(--dsh-maiduo-strip,248px));' +
+  // 锚点定在她身上（画面 62% 处）：窗口变窄只会裁掉两侧樱花，人始终在画面里
+  'object-fit:cover;object-position:62% center;z-index:2147483000;pointer-events:none;' +
+  'opacity:var(--dsh-maiduo-video-opacity,.32);' +
+  '-webkit-mask-image:linear-gradient(to right,rgba(0,0,0,0) 0px,rgba(0,0,0,.3) 20px,' +
+  'rgba(0,0,0,.72) 60px,rgba(0,0,0,.9) 110px,rgba(0,0,0,.95) 100%);' +
+  'mask-image:linear-gradient(to right,rgba(0,0,0,0) 0px,rgba(0,0,0,.3) 20px,' +
+  'rgba(0,0,0,.72) 60px,rgba(0,0,0,.9) 110px,rgba(0,0,0,.95) 100%);' +
   'filter:saturate(.95)"></video>';
 
 /**
@@ -100,7 +106,9 @@ function pushVideoBoot(table) {
     return;
   }
   if (code.trim() === '') return;
-  table.push({ kind: 'script', placement: 'body', text: code });
+  // 把路由路径注入给脚本：两边的常量同源，换版本号时不会有一边打 404
+  const prelude = `window.__dshMaiduoPaths=${JSON.stringify({ video: VIDEO_ROUTE, ack: ACK_ROUTE })};`;
+  table.push({ kind: 'script', placement: 'body', text: prelude + code });
 }
 
 /** 本地私有版：运行时量出侧栏真实宽度写给 --dsh-maiduo-strip（否则人像条右边露出底色）。 */

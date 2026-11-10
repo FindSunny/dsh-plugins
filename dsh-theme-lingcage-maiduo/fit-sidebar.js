@@ -12,7 +12,11 @@
 
   const apply = (width) => {
     if (!Number.isFinite(width) || width < MIN_WIDTH) return;
-    document.documentElement.style.setProperty(VAR, `${Math.round(width)}px`);
+    // 上限保护：量错元素时会得到一个很大的宽度，导致视频 left 越过窗口右缘、整块不可见
+    const max = Math.min(360, Math.max(MIN_WIDTH, window.innerWidth * 0.45));
+    const clamped = Math.min(width, max);
+    document.documentElement.style.setProperty(VAR, `${Math.round(clamped)}px`);
+    window.__dshMaiduoStrip = { raw: Math.round(width), used: Math.round(clamped), max: Math.round(max) };
   };
 
   const findSidebar = () => {
@@ -57,6 +61,17 @@
     if (tries < 80) setTimeout(tick, 120); // 约 10 秒内持续尝试
   };
 
+  // 窗口尺寸变化时重新找元素、重新量：侧栏在窄窗口下可能换布局或被替换
+  let resizeTimer = 0;
+  const onResize = () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      tries = 0;
+      tick();
+    }, 120);
+  };
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick, { once: true });
   else tick();
+  window.addEventListener('resize', onResize);
 })();
