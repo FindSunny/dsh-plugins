@@ -70,7 +70,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "0000000000000000000000000000000000000000",
+            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
             "path": "dsh-notify"
           }
         }
@@ -107,7 +107,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "0000000000000000000000000000000000000000",
+            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
             "path": "dsh-theme-mao"
           }
         }
@@ -116,12 +116,12 @@
     {
       "name": "dsh-theme-lingcage-maiduo",
       "title": {
-        "en": "Ling Cage: Maiduo (frost & ember)",
-        "zh": "灵笼 · 麦朵「霜与余烬」"
+        "en": "Ling Cage: Maiduo (warm night)",
+        "zh": "灵笼 · 麦朵「暖夜」"
       },
       "description": {
-        "en": "Frost-blue and ember base over an original back-lit silhouette with twin pistols.",
-        "zh": "冰蓝 + 余烬橙的深夜底色，背景是原创的背光双枪剪影。"
+        "en": "Warm rose/amber palette with a photo sidebar portrait and a seamlessly looping background video; ships an original illustration as fallback.",
+        "zh": "暖褐 + 玫瑰配色，侧栏人像 + 右侧无缝循环视频；内置原创插画作兜底。"
       },
       "author": "Suo Jianfei",
       "homepage": "https://github.com/FindSunny/dsh-plugins/tree/main/dsh-theme-lingcage-maiduo",
@@ -136,17 +136,17 @@
           "skin",
           "dark",
           "lingcage",
-          "silhouette"
+          "video"
         ]
       },
       "versions": [
         {
-          "version": "0.1.0",
-          "publishTimestamp": 1794214606,
+          "version": "0.2.0",
+          "publishTimestamp": 1794270410,
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "0000000000000000000000000000000000000000",
+            "commit": "f44d86085f1a9e14e271fa7e0b0611187e58c601",
             "path": "dsh-theme-lingcage-maiduo"
           }
         }
