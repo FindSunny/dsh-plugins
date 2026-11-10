@@ -1,0 +1,129 @@
+/* ── 本地私有调色（不进仓库）─────────────────────────────────────────────
+   从《灵笼》麦朵壁纸取色：
+     主色 玫瑰 #e0939a（衣物 #7d514e 提亮）
+     强调 暖琥珀 #e8a06a（画面里的暖侧光）
+     底色 暖黑 #14100e / 褐 #2c1f18
+     点缀 冷灰 #3a3945（背心）→ 用在代码块与说明文字
+   由 build-local-css.cjs 追加在 theme.css 之后，所以同名声明后来者胜。 */
+
+body,
+body[data-ds-dark-theme] {
+  /* surfaces */
+  --dsw-alias-bg-base: rgba(18, 14, 12, 0.55) !important;
+  --dsw-alias-bg-layer-1: rgba(38, 29, 25, 0.87) !important;
+  --dsw-alias-bg-layer-2: rgba(45, 34, 29, 0.90) !important;
+  --dsw-alias-bg-layer-3: rgba(52, 40, 34, 0.94) !important;
+  --dsw-alias-bg-module-platform: rgba(30, 23, 20, 0.80) !important;
+  --dsw-alias-bg-multi-select: rgba(45, 34, 29, 0.85) !important;
+  --dsw-alias-bg-overlay: rgba(26, 20, 17, 0.97) !important;
+  --dsw-alias-bg-skeleton: rgba(255, 244, 236, 0.06) !important;
+  --dsw-alias-bg-mask-1: rgba(10, 8, 6, 0.55) !important;
+  --dsw-alias-bg-mask-2: rgba(10, 8, 6, 0.32) !important;
+  --dsw-alias-bg-mask-3: rgba(10, 8, 6, 0.70) !important;
+  --dsw-alias-bg-mask-photo: rgba(10, 8, 6, 0.70) !important;
+  --dsw-alias-bg-mask-drop: rgba(26, 20, 17, 0.75) !important;
+
+  /* brand: 玫瑰 */
+  --dsw-alias-brand-primary: rgb(224, 147, 154) !important;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: rgb(224, 147, 154) !important;
+  --dsw-alias-brand-primary-invert: rgb(18, 14, 12) !important;
+  --dsw-alias-brand-text: rgb(242, 173, 180) !important;
+  --dsw-alias-button-primary-fill: rgb(224, 147, 154) !important;
+  --dsw-alias-button-primary-hover: rgb(242, 173, 180) !important;
+  --dsw-alias-button-primary-dimmed: rgba(224, 147, 154, 0.18) !important;
+  --dsw-alias-button-info-fill: rgb(224, 147, 154) !important;
+  --dsw-alias-button-info-hover: rgb(242, 173, 180) !important;
+  /* 对比按钮：暖琥珀，整页唯一的暖高光 */
+  --dsw-alias-button-contrast-fill: rgb(232, 160, 106) !important;
+  --dsw-alias-button-floating-fill: rgba(48, 37, 32, 0.92) !important;
+  --dsw-alias-button-floating-hover: rgba(60, 46, 40, 0.95) !important;
+  --dsw-alias-button-elevated-fill: rgba(45, 34, 29, 0.94) !important;
+  --dsw-alias-button-ghost-active-fill: rgba(224, 147, 154, 0.12) !important;
+  --dsw-alias-button-ghost-active-hover: rgba(224, 147, 154, 0.18) !important;
+  --dsw-alias-button-ghost-active-border: rgba(224, 147, 154, 0.45) !important;
+  --dsw-alias-button-tool-bar-fill: rgba(20, 15, 13, 0.55) !important;
+  --dsw-alias-button-tool-bar-hover: rgba(45, 34, 29, 0.75) !important;
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(255, 240, 235, 0.10) !important;
+
+  /* text */
+  --dsw-alias-label-primary: rgb(247, 236, 229) !important;
+  --dsw-alias-label-primary-dimmed: rgb(226, 210, 201) !important;
+  --dsw-alias-label-primary-bluish: rgb(242, 173, 180) !important;
+  --dsw-alias-label-primary-foreground: rgb(18, 14, 12) !important;
+  --dsw-alias-label-primary-inverted: rgb(18, 14, 12) !important;
+  /* text：次级文字整体提亮（附件名、元信息这类小字在深底上原本太暗） */
+  --dsw-alias-label-secondary: rgb(219, 202, 193) !important;
+  --dsw-alias-label-tertiary: rgb(202, 182, 172) !important;
+  --dsw-alias-label-caption: rgb(190, 170, 160) !important;
+  --dsw-alias-label-dimmed: rgb(174, 154, 144) !important;
+
+  /* borders */
+  --dsw-alias-border-l1: rgba(255, 240, 235, 0.08) !important;
+  --dsw-alias-border-l2: rgba(255, 240, 235, 0.14) !important;
+  --dsw-alias-border-l2-darkmode-thin: rgba(255, 240, 235, 0.08) !important;
+  --dsw-alias-border-l3: rgba(255, 240, 235, 0.20) !important;
+  --dsw-alias-border-l4: rgba(255, 240, 235, 0.26) !important;
+  --dsw-alias-border-inverted: rgba(255, 240, 235, 0.08) !important;
+  --dsw-alias-border-inverted2: rgba(255, 240, 235, 0.11) !important;
+
+  /* interactions */
+  --dsw-alias-interactive-bg-hover: rgba(255, 240, 235, 0.06) !important;
+  --dsw-alias-interactive-bg-hover-accent: rgba(224, 147, 154, 0.16) !important;
+  --dsw-alias-interactive-bg-hover-solid: rgba(60, 46, 40, 0.92) !important;
+  --dsw-alias-interactive-bg-hover-danger: rgba(255, 107, 107, 0.14) !important;
+  --dsw-alias-interactive-bg-active: rgba(255, 240, 235, 0.10) !important;
+
+  /* states */
+  --dsw-alias-state-business-primary: rgb(224, 147, 154) !important;
+  --dsw-alias-state-business-tertiary: rgba(224, 147, 154, 0.16) !important;
+  --dsw-alias-state-error-primary: rgb(255, 107, 107) !important;
+  --dsw-alias-state-error-secondary: rgb(255, 140, 140) !important;
+  --dsw-alias-state-success-primary: rgb(87, 195, 156) !important;
+  --dsw-alias-state-success-secondary: rgb(122, 214, 180) !important;
+  --dsw-alias-state-success-tertiary: rgba(87, 195, 156, 0.14) !important;
+  --dsw-alias-state-warn-primary: rgb(232, 160, 106) !important;
+  --dsw-alias-state-warn-secondary: rgb(244, 186, 140) !important;
+  --dsw-alias-state-warn-tertiary: rgba(232, 160, 106, 0.14) !important;
+  --dsw-alias-state-warn-label: rgb(240, 180, 130) !important;
+
+  /* markdown：代码块改成**完全不透明**的近黑（之前 0.95 会透出视频，被染成暖褐） */
+  --dsw-alias-markdown-code-block: rgb(9, 7, 6) !important;
+  --dsw-alias-markdown-code-block-banner: rgb(22, 17, 14) !important;
+  --dsw-alias-markdown-inline-code: rgb(30, 23, 20) !important;
+  --dsw-alias-markdown-code-segment-selected: rgba(224, 147, 154, 0.16) !important;
+  --dsw-alias-markdown-code-segment-unselected: rgba(224, 147, 154, 0.05) !important;
+  --dsw-alias-markdown-placeholder: rgba(45, 34, 29, 0.95) !important;
+  --dsw-alias-markdown-tag: rgba(52, 40, 34, 0.95) !important;
+  --dsw-alias-markdown-citation: rgba(52, 40, 34, 0.95) !important;
+
+  /* specific surfaces */
+  /* 侧栏半透明：让 body::after 的人像条透出来 */
+  --dsw-specific-sidebar-fill: rgba(12, 10, 8, 0.42) !important;
+  --dsw-specific-sidebar-nav-item-active: rgba(224, 147, 154, 0.14) !important;
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(224, 147, 154, 0.26) !important;
+  --dsw-specific-sidebar-nav-item-hover: rgba(255, 240, 235, 0.05) !important;
+  --dsw-specific-bubble: rgba(45, 34, 29, 0.92) !important;
+  --dsw-specific-bubble-highlight: rgba(224, 147, 154, 0.20) !important;
+  --dsw-specific-input-major: rgba(38, 29, 25, 0.78) !important;
+  --dsw-specific-login-input: rgba(38, 29, 25, 0.95) !important;
+  --dsw-specific-menu: rgba(30, 23, 20, 0.98) !important;
+  --dsw-specific-selector: rgba(45, 34, 29, 0.95) !important;
+  --dsw-specific-tip: rgba(45, 34, 29, 0.95) !important;
+
+  /* scrollbar */
+  --dsh-scrollbar-thumb: rgba(255, 240, 235, 0.18) !important;
+  --dsh-scrollbar-thumb-hover: rgba(255, 240, 235, 0.28) !important;
+  --dsw-alias-scrollbar-bg-l1: rgba(255, 240, 235, 0.14) !important;
+  --dsw-alias-scrollbar-bg-l2: rgba(255, 240, 235, 0.16) !important;
+  --dsw-alias-scrollbar-hover-l1: rgba(255, 240, 235, 0.24) !important;
+  --dsw-alias-scrollbar-hover-l2: rgba(255, 240, 235, 0.26) !important;
+
+  /* toast / tooltip */
+  --dsw-alias-toast-bg: rgba(52, 40, 34, 0.97) !important;
+  --dsw-alias-tooltip-bg: rgba(52, 40, 34, 0.97) !important;
+}
+
+::selection {
+  background: rgba(224, 147, 154, 0.30) !important;
+  color: rgb(250, 244, 240) !important;
+}

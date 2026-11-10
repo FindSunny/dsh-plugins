@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>灵笼 · 麦朵 —— 侧栏人像 + 右侧视频</title>
+    <link rel="stylesheet" href="./theme.css" />
+    <link rel="stylesheet" href="./theme.local.css" />
+    <style>
+      body { margin: 0; min-height: 100vh; }
+      .shell {
+        display: grid;
+        grid-template-columns: var(--dsh-maiduo-strip, 248px) 1fr;
+        height: 100vh;
+        font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        color: var(--dsw-alias-label-primary);
+      }
+      /* 侧栏：背景由 theme.local.css 的 body::after 提供，这里保持透明 */
+      .side {
+        background: transparent;
+        border-right: 1px solid var(--dsw-alias-border-l1);
+        padding: 14px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        position: relative;
+        z-index: 1;
+      }
+      .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; padding: 6px 8px 16px; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); }
+      .dot { width: 9px; height: 9px; border-radius: 999px; background: var(--dsw-alias-brand-primary); box-shadow: 0 0 12px var(--dsw-alias-brand-primary); }
+      .nav { padding: 8px 10px; border-radius: 8px; font-size: 13px; color: var(--dsw-alias-label-secondary); }
+      .nav.active {
+        background: var(--dsw-specific-sidebar-nav-item-active);
+        color: var(--dsw-alias-label-primary);
+        box-shadow: inset 2px 0 0 var(--dsw-specific-sidebar-nav-item-active-accent);
+      }
+      .nav:hover { background: var(--dsw-specific-sidebar-nav-item-hover); }
+      .foot { margin-top: auto; font-size: 12px; color: var(--dsw-alias-label-tertiary); padding: 8px 10px; }
+
+      .main { position: relative; overflow: hidden; }
+      .bgvid {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        /* 与插件一致：横屏 1920×1080 素材 → 铺满右侧工作区，靠右裁（人在右半边） */
+        object-fit: cover;
+        object-position: right center;
+        opacity: 0.42;
+        filter: saturate(0.95);
+        z-index: 0;
+        pointer-events: none;
+        /* 只挡最左 26%（樱花），往右快速淡入 —— 手也看得到 */
+        -webkit-mask-image: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0) 26%,
+          rgba(0, 0, 0, 0.55) 50%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+        mask-image: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0) 26%,
+          rgba(0, 0, 0, 0.55) 50%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 22px 30px;
+        min-width: 0;
+      }
+      .title { font-size: 13px; color: var(--dsw-alias-label-tertiary); }
+      .msg {
+        max-width: 620px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        line-height: 1.65;
+        background: var(--dsw-specific-bubble);
+        border: 1px solid var(--dsw-alias-border-l1);
+        backdrop-filter: blur(2px);
+      }
+      .msg.user { align-self: flex-end; background: var(--dsw-specific-bubble-highlight); border-color: var(--dsw-alias-border-l2); }
+      .msg b { color: var(--dsw-alias-brand-primary); font-weight: 600; }
+      code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--dsw-alias-markdown-inline-code); padding: 2px 6px; border-radius: 6px; }
+      pre { margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--dsw-alias-markdown-code-block); border: 1px solid var(--dsw-alias-border-l1); font-size: 12.5px; overflow: auto; }
+      .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+      .badge { font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--dsw-alias-border-l2); color: var(--dsw-alias-label-secondary); }
+      .composer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: var(--dsw-specific-input-major);
+        border: 1px solid var(--dsw-alias-border-l2);
+        color: var(--dsw-alias-label-tertiary);
+        font-size: 14px;
+        backdrop-filter: blur(2px);
+      }
+      .send { margin-left: auto; background: var(--dsw-alias-button-contrast-fill); color: #1a1210; font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 9px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side">
+        <div class="brand"><span class="dot"></span>DeepSeek Harness</div>
+        <div class="nav active">新会话</div>
+        <div class="nav">桌面通知插件优化</div>
+        <div class="nav">灵笼麦朵主题</div>
+        <div class="nav">市场索引发布</div>
+        <div class="foot">设置 · 插件 · 生图</div>
+      </aside>
+
+      <main class="main">
+        <video class="bgvid" src="./assets/background.loop.mp4" autoplay muted loop playsinline></video>
+        <div class="content">
+          <div class="title">灵笼 · 麦朵 —— 左：她的静帧（侧栏）／ 右：循环视频（工作区）</div>
+          <div class="msg">普通回答：正文暖白，<b>强调与链接走玫瑰</b>，行内代码 <code>--dsw-alias-brand-primary</code> 是深一层的色块；气泡半透明，能透出一点视频。</div>
+          <div class="msg user">用户气泡：玫瑰淡染。</div>
+          <pre><code>// 代码块
+const theme = 'lingcage-maiduo';
+console.log(`已启用 ${theme}`);</code></pre>
+          <div class="badges">
+            <span class="badge">成功 / 冷青</span>
+            <span class="badge">警告 / 暖琥珀</span>
+            <span class="badge">错误 / 信号红</span>
+          </div>
+          <div class="composer">
+            <span>说点什么…</span>
+            <span class="send">发送</span>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

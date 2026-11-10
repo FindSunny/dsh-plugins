@@ -6,6 +6,7 @@
 |---|---|---|
 | [`dsh-notify`](./dsh-notify) | 长任务答完弹 Windows 桌面通知：带回答摘要、用时，可点击唤回 DSH；区分答完 / 中断 / 出错；有开关和阈值 | Windows |
 | [`dsh-theme-mao`](./dsh-theme-mao) | 「人民万岁」主题：老照片背景 + 干净浅色调 | 全平台 |
+| [`dsh-theme-lingcage-maiduo`](./dsh-theme-lingcage-maiduo) | 「灵笼 · 麦朵」主题：暖褐 + 玫瑰配色，侧栏人像 + 右侧无缝循环视频（带原创插画兜底） | 全平台 |
 
 ## 安装
 

@@ -1,0 +1,4 @@
+# 灵笼 · 麦朵「霜与余烬」theme: mount the host plugin that injects the theme CSS row.
+- insert:
+    - id: theme-maiduo
+      name: dsh-theme-lingcage-maiduo

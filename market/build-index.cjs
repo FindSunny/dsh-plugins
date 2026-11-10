@@ -32,6 +32,7 @@ function publishTimestamp(name, version) {
 
 const notifyPkg = readJson(path.join(ROOT, 'dsh-notify', 'package.json'));
 const themePkg = readJson(path.join(ROOT, 'dsh-theme-mao', 'package.json'));
+const lingcagePkg = readJson(path.join(ROOT, 'dsh-theme-lingcage-maiduo', 'package.json'));
 const notifyIcon = fs.readFileSync(path.join(ROOT, 'dsh-notify', 'icon.png'));
 
 const index = {
@@ -96,6 +97,33 @@ const index = {
           version: themePkg.version,
           publishTimestamp: publishTimestamp(themePkg.name, themePkg.version),
           source: { type: 'git', url: BASE, commit: process.env.DSH_MARKET_COMMIT ?? '0'.repeat(40), path: 'dsh-theme-mao' },
+        },
+      ],
+    },
+    {
+      name: lingcagePkg.name,
+      title: { en: 'Ling Cage: Maiduo (warm night)', zh: '灵笼 · 麦朵「暖夜」' },
+      description: {
+        en: 'Warm rose/amber palette with a photo sidebar portrait and a seamlessly looping background video; ships an original illustration as fallback.',
+        zh: '暖褐 + 玫瑰配色，侧栏人像 + 右侧无缝循环视频；内置原创插画作兜底。',
+      },
+      author: 'Suo Jianfei',
+      homepage: `${BASE}/tree/main/dsh-theme-lingcage-maiduo`,
+      repository: { url: BASE, directory: 'dsh-theme-lingcage-maiduo' },
+      metadata: {
+        category: 'theme',
+        keywords: ['theme', 'skin', 'dark', 'lingcage', 'video'],
+      },
+      versions: [
+        {
+          version: lingcagePkg.version,
+          publishTimestamp: publishTimestamp(lingcagePkg.name, lingcagePkg.version),
+          source: {
+            type: 'git',
+            url: BASE,
+            commit: process.env.DSH_MARKET_COMMIT ?? '0'.repeat(40),
+            path: 'dsh-theme-lingcage-maiduo',
+          },
         },
       ],
     },

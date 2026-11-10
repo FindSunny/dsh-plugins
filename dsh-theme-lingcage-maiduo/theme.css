@@ -1,0 +1,158 @@
+/* ── 灵笼 · 麦朵 · 霜与余烬 ────────────────────────────────────────────────
+   Injected by dsh-theme-lingcage-maiduo.
+
+   Base: 灵笼式的深夜蓝（近黑靛蓝、灯塔余烬）
+   Accent: 冰蓝 #6ec8ff（主色）+ 余烬橙 #ff7a45（对比/警告/用户气泡）
+   Background: original SVG (lighthouse + back-lit silhouette, twin pistols),
+   built by build-css.cjs — no third-party artwork.
+
+   Both body selectors carry the same values so the look is identical
+   regardless of the built-in light/dark preference. */
+
+html {
+  color-scheme: dark !important;
+}
+
+body,
+body[data-ds-dark-theme] {
+  background-color: rgb(5, 8, 14) !important;
+}
+
+/* background art + dark veil (veil stacked over the artwork) */
+/* __BG_BLOCK_START__ */
+body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(rgba(5, 8, 14, 0.52), rgba(5, 8, 14, 0.78)),
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAwIDkwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgc2xpY2UiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3kiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDMwNTBhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC40MCIgc3RvcC1jb2xvcj0iIzA4MTEyMCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNzIiIHN0b3AtY29sb3I9IiMxMDIyMzgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTUzMzUwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJlbWJlckdsb3ciIGN4PSIwLjUiIGN5PSIwLjUiIHI9IjAuNSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmYjI3YSIgc3RvcC1vcGFjaXR5PSIwLjU1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC40MCIgc3RvcC1jb2xvcj0iI2ZmN2E0NSIgc3RvcC1vcGFjaXR5PSIwLjE4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmN2E0NSIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJpY2VHbG93IiBjeD0iMC41IiBjeT0iMC41IiByPSIwLjUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiZmU2ZmYiIHN0b3Atb3BhY2l0eT0iMC40NSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNDUiIHN0b3AtY29sb3I9IiM2ZWM4ZmYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM2ZWM4ZmYiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmVhbUwiIHgxPSIxIiB5MT0iMCIgeDI9IjAiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZiOThmIiBzdG9wLW9wYWNpdHk9IjAuMjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZiOThmIiBzdG9wLW9wYWNpdHk9IjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJlYW1SIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmYjk4ZiIgc3RvcC1vcGFjaXR5PSIwLjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmYjk4ZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0b3dlciIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjAiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwNTA5MGYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjQ1IiBzdG9wLWNvbG9yPSIjMTExZDMwIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzA0MDcwYyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmlkZ2UiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMGExNTI0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzA0MDYwYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxmaWx0ZXIgaWQ9InNvZnQiIHg9Ii00MCUiIHk9Ii00MCUiIHdpZHRoPSIxODAlIiBoZWlnaHQ9IjE4MCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI5Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CgogIDxyZWN0IHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjkwMCIgZmlsbD0idXJsKCNza3kpIi8+CgogIDwhLS0gc3RhcnM6IGNvbGQgd2hpdGUgKyBhIGZldyBlbWJlciBzcGFya3MgLS0+CiAgPGcgZmlsbD0iI2NmZTRmZiI+CiAgICA8Y2lyY2xlIGN4PSI4NiIgY3k9Ijc0IiByPSIxLjUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjE2OCIgY3k9IjE0MiIgcj0iMS4xIiBvcGFjaXR5PSIwLjQ1Ii8+CiAgICA8Y2lyY2xlIGN4PSIyNTIiIGN5PSI2MCIgcj0iMS44IiBvcGFjaXR5PSIwLjc1Ii8+PGNpcmNsZSBjeD0iMzMwIiBjeT0iMTEyIiByPSIxIiBvcGFjaXR5PSIwLjQiLz4KICAgIDxjaXJjbGUgY3g9IjQ2MiIgY3k9IjU4IiByPSIxLjMiIG9wYWNpdHk9IjAuNTUiLz48Y2lyY2xlIGN4PSI1NDgiIGN5PSIxMjgiIHI9IjEuNiIgb3BhY2l0eT0iMC42NSIvPgogICAgPGNpcmNsZSBjeD0iNjQwIiBjeT0iNzAiIHI9IjEuMSIgb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iNzQyIiBjeT0iMTE4IiByPSIxLjkiIG9wYWNpdHk9IjAuOCIvPgogICAgPGNpcmNsZSBjeD0iODM2IiBjeT0iNTgiIHI9IjEuMiIgb3BhY2l0eT0iMC40NSIvPjxjaXJjbGUgY3g9IjkyOCIgY3k9IjE0MCIgcj0iMS41IiBvcGFjaXR5PSIwLjYiLz4KICAgIDxjaXJjbGUgY3g9IjEwMjQiIGN5PSI3NiIgcj0iMSIgb3BhY2l0eT0iMC4zNSIvPjxjaXJjbGUgY3g9IjEyMTQiIGN5PSI2NiIgcj0iMS4zIiBvcGFjaXR5PSIwLjUiLz4KICAgIDxjaXJjbGUgY3g9IjEzMDgiIGN5PSIxMzIiIHI9IjEuMSIgb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMTQwMiIgY3k9IjcyIiByPSIxLjgiIG9wYWNpdHk9IjAuNzUiLz4KICAgIDxjaXJjbGUgY3g9IjE1MDAiIGN5PSIxMjYiIHI9IjEuMiIgb3BhY2l0eT0iMC40NSIvPjxjaXJjbGUgY3g9Ijc2IiBjeT0iMjM4IiByPSIxLjEiIG9wYWNpdHk9IjAuMzUiLz4KICAgIDxjaXJjbGUgY3g9IjE5NiIgY3k9IjMwNCIgcj0iMS40IiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI1ODYiIGN5PSIyNTIiIHI9IjEiIG9wYWNpdHk9IjAuMyIvPgogICAgPGNpcmNsZSBjeD0iNzA0IiBjeT0iMzI2IiByPSIxLjMiIG9wYWNpdHk9IjAuNDUiLz48Y2lyY2xlIGN4PSIxNTY2IiBjeT0iMjI4IiByPSIxLjQiIG9wYWNpdHk9IjAuNSIvPgogICAgPGNpcmNsZSBjeD0iMTA2NCIgY3k9IjI2OCIgcj0iMS4yIiBvcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4ODQiIGN5PSIyMTIiIHI9IjEiIG9wYWNpdHk9IjAuMyIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZmZiMDhhIj4KICAgIDxjaXJjbGUgY3g9IjEyOCIgY3k9IjE3NiIgcj0iMS42IiBvcGFjaXR5PSIwLjQ1Ii8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iMjA2IiByPSIxLjMiIG9wYWNpdHk9IjAuMzUiLz4KICAgIDxjaXJjbGUgY3g9Ijk4MCIgY3k9IjE4NiIgcj0iMS42IiBvcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIxMzY0IiBjeT0iMjEyIiByPSIxLjIiIG9wYWNpdHk9IjAuMyIvPgogICAgPGNpcmNsZSBjeD0iMjQ4IiBjeT0iMzU2IiByPSIxLjUiIG9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9Ijc3MiIgY3k9IjI4NiIgcj0iMS4xIiBvcGFjaXR5PSIwLjI4Ii8+CiAgPC9nPgoKICA8IS0tIGxpZ2h0aG91c2UgaGFsbyAoZW1iZXIpIC0tPgogIDxlbGxpcHNlIGN4PSIzNjAiIGN5PSI3MTIiIHJ4PSI1MjAiIHJ5PSIyNDAiIGZpbGw9InVybCgjZW1iZXJHbG93KSIgb3BhY2l0eT0iMC41NSIvPgoKICA8IS0tIGJlYW1zIC0tPgogIDxwYXRoIGQ9Ik0zNjAgMjEyIEw4IDM0NiBMOCAyNTggWiIgZmlsbD0idXJsKCNiZWFtTCkiLz4KICA8cGF0aCBkPSJNMzYwIDIxMiBMNzEyIDM0MCBMNzEyIDI1NCBaIiBmaWxsPSJ1cmwoI2JlYW1SKSIvPgoKICA8IS0tIG1vb25saWdodCByaW0gYmVoaW5kIHRoZSBmaWd1cmUgKGNvbGQpIC0tPgogIDxlbGxpcHNlIGN4PSIxMTg4IiBjeT0iNTk2IiByeD0iMjUwIiByeT0iMjkwIiBmaWxsPSJ1cmwoI2ljZUdsb3cpIiBvcGFjaXR5PSIwLjU1Ii8+CgogIDwhLS0gcmlkZ2UgKyBpbmR1c3RyaWFsIHNpbGhvdWV0dGVzIC0tPgogIDxwYXRoIGQ9Ik0wIDc0MiBMOTYgNzE2IEwxNTQgNzMwIEwyMjggNzAyIEwzMDAgNzI2IEwzOTIgNzA2IEw0NzAgNzM2IEw1NjAgNzE0IEw2NDggNzQwIEw3NDIgNzIwIEw4MzYgNzQ0IEw5MzQgNzE4IEwxMDMwIDc0MiBMMTEyOCA3MTYgTDEyMjQgNzQwIEwxMzIwIDcxNCBMMTQyMCA3NDIgTDE1MTIgNzIwIEwxNjAwIDczOCBMMTYwMCA5MDAgTDAgOTAwIFoiIGZpbGw9InVybCgjcmlkZ2UpIi8+CiAgPGcgZmlsbD0iIzA2MGIxMyIgb3BhY2l0eT0iMC45Ij4KICAgIDxyZWN0IHg9IjEwNjAiIHk9IjY4NiIgd2lkdGg9IjI2IiBoZWlnaHQ9IjU4IiByeD0iMyIvPgogICAgPHJlY3QgeD0iMTA5MiIgeT0iNzAwIiB3aWR0aD0iMTgiIGhlaWdodD0iNDQiIHJ4PSIzIi8+CiAgICA8cmVjdCB4PSIxMzk2IiB5PSI2OTIiIHdpZHRoPSIyMiIgaGVpZ2h0PSI1MiIgcng9IjMiLz4KICAgIDxyZWN0IHg9IjE0MjQiIHk9IjcwNiIgd2lkdGg9IjE0IiBoZWlnaHQ9IjM4IiByeD0iMyIvPgogICAgPGNpcmNsZSBjeD0iMTA3MyIgY3k9IjY4MiIgcj0iMi40IiBmaWxsPSIjZmZiMjdhIiBvcGFjaXR5PSIwLjciLz4KICAgIDxjaXJjbGUgY3g9IjE0MDciIGN5PSI2ODgiIHI9IjIiIGZpbGw9IiNmZmIyN2EiIG9wYWNpdHk9IjAuNTUiLz4KICA8L2c+CgogIDwhLS0gbGlnaHRob3VzZSAtLT4KICA8Zz4KICAgIDxwYXRoIGQ9Ik0zMzIgNzQ4IEwzNDQgMjY4IEwzNzYgMjY4IEwzODggNzQ4IFoiIGZpbGw9InVybCgjdG93ZXIpIi8+CiAgICA8cGF0aCBkPSJNMzQ0IDQ1MiBMMzc2IDQ1MiBMMzc4IDUyMCBMMzQyIDUyMCBaIiBmaWxsPSIjNmVjOGZmIiBvcGFjaXR5PSIwLjEwIi8+CiAgICA8cGF0aCBkPSJNMzQyIDYwMCBMMzc4IDYwMCBMMzgwIDY1NiBMMzQwIDY1NiBaIiBmaWxsPSIjZmY5ZjVhIiBvcGFjaXR5PSIwLjEwIi8+CiAgICA8cmVjdCB4PSIzMzYiIHk9IjI1MiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjE2IiByeD0iNSIgZmlsbD0iIzBhMTQyMiIvPgogICAgPHJlY3QgeD0iMzQ2IiB5PSIyMDQiIHdpZHRoPSIyOCIgaGVpZ2h0PSI0OCIgcng9IjciIGZpbGw9IiMwYTE0MjIiLz4KICAgIDxjaXJjbGUgY3g9IjM2MCIgY3k9IjIyOCIgcj0iOCIgZmlsbD0iI2ZmZDliOCIvPgogICAgPGNpcmNsZSBjeD0iMzYwIiBjeT0iMjI4IiByPSIzMCIgZmlsbD0idXJsKCNlbWJlckdsb3cpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8cmVjdCB4PSIzMzIiIHk9Ijc0NCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjEwIiByeD0iNCIgZmlsbD0iIzA3MGMxNSIvPgogIDwvZz4KCiAgPCEtLSBmaWd1cmU6IG9yaWdpbmFsIHNpbGhvdWV0dGUsIGJhY2sgdmlldywgdHdpbiBwaXN0b2xzLCByaW0tbGl0IC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDExODggNzU2KSI+CiAgICA8IS0tIGNvbGQgcmltIGdsb3cgLS0+CiAgICA8ZyBmaWx0ZXI9InVybCgjc29mdCkiIG9wYWNpdHk9IjAuNTUiIGZpbGw9IiM2ZWM4ZmYiPgogICAgICA8cGF0aCBkPSJNLTIgLTIwNiBhMjcgMjcgMCAxIDAgMC4xIDAgeiIvPgogICAgICA8cGF0aCBkPSJNLTUyIC0xNTAgcTQwIC0xOCA1MiAtMTggcTEyIDAgNTIgMTggbDEwIDExOCBsLTEyIDQgLTE0IC05NiBsLTYgOTYgLTggMTM4IGgtMjQgbC0xMCAtMTM4IGgtMTYgbC0xMCAxMzggaC0yNCBsLTggLTEzOCAtNiAtOTYgLTE0IDk2IC0xMiAtNCB6Ii8+CiAgICA8L2c+CiAgICA8IS0tIGJvZHkgLS0+CiAgICA8ZyBmaWxsPSIjMDQwNzBjIj4KICAgICAgPCEtLSBoZWFkIC0tPgogICAgICA8cGF0aCBkPSJNLTIgLTIwNiBhMjcgMjcgMCAxIDAgMC4xIDAgeiIvPgogICAgICA8IS0tIGhhaXIsIHNob3VsZGVyIGxlbmd0aCAtLT4KICAgICAgPHBhdGggZD0iTS0zMCAtMjE0IHEtOCA0NCA0IDY2IGwtMTAgMzQgaDE4IGw2IC00NCBxMTAgMTAgMTggMCBsNiA0NCBoMTggbC0xMCAtMzQgcTEyIC0yMiA0IC02NiBxLTEyIC0xOCAtMjcgLTE4IHEtMTUgMCAtMjcgMTggeiIvPgogICAgICA8IS0tIGNvYXQ6IHNob3VsZGVycyDihpIgd2Fpc3Qg4oaSIGhlbSAtLT4KICAgICAgPHBhdGggZD0iTS01MiAtMTUwIHE0MCAtMTggNTIgLTE4IHExMiAwIDUyIDE4IGwxMCAxMTggbC0xMiA0IC0xNCAtOTYgLTYgOTYgLTggMTM4IGgtMjQgbC0xMCAtMTM4IGgtMTYgbC0xMCAxMzggaC0yNCBsLTggLTEzOCAtNiAtOTYgLTE0IDk2IC0xMiAtNCB6Ii8+CiAgICA8L2c+CiAgICA8IS0tIGFybXMgLS0+CiAgICA8ZyBmaWxsPSIjMDQwNzBjIj4KICAgICAgPHBhdGggZD0iTS01NCAtMTQ2IGwtMTYgOTYgMTQgNiAxOCAtOTQgeiIvPgogICAgICA8cGF0aCBkPSJNNTQgLTE0NiBsMTYgOTYgLTE0IDYgLTE4IC05NCB6Ii8+CiAgICA8L2c+CiAgICA8IS0tIHR3aW4gcGlzdG9scyAoc2lsaG91ZXR0ZSkgd2l0aCBlbWJlciBtdXp6bGUgZmxhc2hlcyAtLT4KICAgIDxnIGZpbGw9IiMwYTEyMjAiPgogICAgICA8cGF0aCBkPSJNLTc4IDQ0IGwzMCAtOCA2IDE2IC0zMCAxMCB6Ii8+CiAgICAgIDxwYXRoIGQ9Ik0tNzAgNjAgbDEyIDQgLTggMjYgLTEyIC00IHoiLz4KICAgICAgPHBhdGggZD0iTTc4IDQ0IGwtMzAgLTggLTYgMTYgMzAgMTAgeiIvPgogICAgICA8cGF0aCBkPSJNNzAgNjAgbC0xMiA0IDggMjYgMTIgLTQgeiIvPgogICAgPC9nPgogICAgPGNpcmNsZSBjeD0iLTkyIiBjeT0iNDAiIHI9IjMuNCIgZmlsbD0iI2ZmOWY1YSIgb3BhY2l0eT0iMC44NSIvPgogICAgPGNpcmNsZSBjeD0iOTIiIGN5PSI0MCIgcj0iMy40IiBmaWxsPSIjZmY5ZjVhIiBvcGFjaXR5PSIwLjg1Ii8+CiAgICA8Y2lyY2xlIGN4PSItOTIiIGN5PSI0MCIgcj0iOSIgZmlsbD0idXJsKCNlbWJlckdsb3cpIiBvcGFjaXR5PSIwLjgiLz4KICAgIDxjaXJjbGUgY3g9IjkyIiBjeT0iNDAiIHI9IjkiIGZpbGw9InVybCgjZW1iZXJHbG93KSIgb3BhY2l0eT0iMC44Ii8+CiAgICA8IS0tIGdyb3VuZCBzaGFkb3cgLS0+CiAgICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjQiIHJ4PSI3NCIgcnk9IjEwIiBmaWxsPSIjMDMwNTBhIiBvcGFjaXR5PSIwLjYiLz4KICA8L2c+CgogIDwhLS0gZHJpZnRpbmcgZHVzdDogY29sZCArIGVtYmVyIC0tPgogIDxnIGZpbGw9IiNjZmU0ZmYiPgogICAgPGNpcmNsZSBjeD0iMTA0NiIgY3k9IjY0MCIgcj0iMi42IiBvcGFjaXR5PSIwLjI4Ii8+PGNpcmNsZSBjeD0iMTEwNCIgY3k9IjcwMCIgcj0iMS44IiBvcGFjaXR5PSIwLjIiLz4KICAgIDxjaXJjbGUgY3g9IjEyNjgiIGN5PSI2MzYiIHI9IjIuMiIgb3BhY2l0eT0iMC4yNCIvPjxjaXJjbGUgY3g9IjEzMzAiIGN5PSI3MDQiIHI9IjEuNyIgb3BhY2l0eT0iMC4xOCIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZmZiMDhhIj4KICAgIDxjaXJjbGUgY3g9Ijk2MiIgY3k9IjcxMiIgcj0iMi4yIiBvcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIxMjg4IiBjeT0iNzIyIiByPSIxLjgiIG9wYWNpdHk9IjAuMjIiLz4KICAgIDxjaXJjbGUgY3g9IjExNDAiIGN5PSI0NzAiIHI9IjEuNiIgb3BhY2l0eT0iMC4yNiIvPjxjaXJjbGUgY3g9IjEyNTIiIGN5PSI0NTIiIHI9IjEuNCIgb3BhY2l0eT0iMC4yIi8+CiAgPC9nPgo8L3N2Zz4K") no-repeat center 42% / cover,
+    radial-gradient(1100px 680px at 22% 70%, rgba(255, 122, 69, 0.14), transparent 70%),
+    radial-gradient(900px 620px at 76% 58%, rgba(110, 200, 255, 0.12), transparent 72%),
+    rgb(5, 8, 14) !important;
+  filter: saturate(1.02) !important;
+}
+/* __BG_BLOCK_END__ */
+
+body,
+body[data-ds-dark-theme] {
+  /* surfaces */
+  --dsw-alias-bg-base: rgba(6, 10, 18, 0.52) !important;
+  --dsw-alias-bg-layer-1: rgba(14, 22, 36, 0.86) !important;
+  --dsw-alias-bg-layer-2: rgba(18, 27, 44, 0.90) !important;
+  --dsw-alias-bg-layer-3: rgba(22, 33, 52, 0.94) !important;
+  --dsw-alias-bg-module-platform: rgba(11, 17, 29, 0.80) !important;
+  --dsw-alias-bg-multi-select: rgba(18, 27, 44, 0.85) !important;
+  --dsw-alias-bg-overlay: rgba(10, 15, 25, 0.97) !important;
+  --dsw-alias-bg-skeleton: rgba(255, 255, 255, 0.06) !important;
+  --dsw-alias-bg-mask-1: rgba(3, 5, 10, 0.55) !important;
+  --dsw-alias-bg-mask-2: rgba(3, 5, 10, 0.32) !important;
+  --dsw-alias-bg-mask-3: rgba(3, 5, 10, 0.70) !important;
+  --dsw-alias-bg-mask-photo: rgba(3, 5, 10, 0.70) !important;
+  --dsw-alias-bg-mask-drop: rgba(10, 15, 25, 0.75) !important;
+
+  /* brand: 冰蓝 */
+  --dsw-alias-brand-primary: rgb(110, 200, 255) !important;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: rgb(110, 200, 255) !important;
+  --dsw-alias-brand-primary-invert: rgb(6, 10, 18) !important;
+  --dsw-alias-brand-text: rgb(146, 216, 255) !important;
+  --dsw-alias-button-primary-fill: rgb(110, 200, 255) !important;
+  --dsw-alias-button-primary-hover: rgb(146, 216, 255) !important;
+  --dsw-alias-button-primary-dimmed: rgba(110, 200, 255, 0.18) !important;
+  --dsw-alias-button-info-fill: rgb(110, 200, 255) !important;
+  --dsw-alias-button-info-hover: rgb(146, 216, 255) !important;
+  /* 对比按钮走余烬橙：整页唯一的高饱和暖色，用在最关键的动作上 */
+  --dsw-alias-button-contrast-fill: rgb(255, 122, 69) !important;
+  --dsw-alias-button-floating-fill: rgba(20, 30, 48, 0.92) !important;
+  --dsw-alias-button-floating-hover: rgba(28, 40, 62, 0.95) !important;
+  --dsw-alias-button-elevated-fill: rgba(18, 27, 44, 0.94) !important;
+  --dsw-alias-button-ghost-active-fill: rgba(110, 200, 255, 0.12) !important;
+  --dsw-alias-button-ghost-active-hover: rgba(110, 200, 255, 0.18) !important;
+  --dsw-alias-button-ghost-active-border: rgba(110, 200, 255, 0.45) !important;
+  --dsw-alias-button-tool-bar-fill: rgba(10, 16, 26, 0.55) !important;
+  --dsw-alias-button-tool-bar-hover: rgba(22, 33, 52, 0.75) !important;
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(255, 255, 255, 0.10) !important;
+
+  /* text */
+  --dsw-alias-label-primary: rgb(238, 244, 252) !important;
+  --dsw-alias-label-primary-dimmed: rgb(210, 221, 238) !important;
+  --dsw-alias-label-primary-bluish: rgb(146, 216, 255) !important;
+  --dsw-alias-label-primary-foreground: rgb(6, 10, 18) !important;
+  --dsw-alias-label-primary-inverted: rgb(6, 10, 18) !important;
+  --dsw-alias-label-secondary: rgb(160, 176, 200) !important;
+  --dsw-alias-label-tertiary: rgb(130, 146, 170) !important;
+  --dsw-alias-label-caption: rgb(116, 132, 156) !important;
+  --dsw-alias-label-dimmed: rgb(94, 108, 130) !important;
+
+  /* borders */
+  --dsw-alias-border-l1: rgba(255, 255, 255, 0.08) !important;
+  --dsw-alias-border-l2: rgba(255, 255, 255, 0.14) !important;
+  --dsw-alias-border-l2-darkmode-thin: rgba(255, 255, 255, 0.08) !important;
+  --dsw-alias-border-l3: rgba(255, 255, 255, 0.20) !important;
+  --dsw-alias-border-l4: rgba(255, 255, 255, 0.26) !important;
+  --dsw-alias-border-inverted: rgba(255, 255, 255, 0.08) !important;
+  --dsw-alias-border-inverted2: rgba(255, 255, 255, 0.11) !important;
+
+  /* interactions */
+  --dsw-alias-interactive-bg-hover: rgba(255, 255, 255, 0.06) !important;
+  --dsw-alias-interactive-bg-hover-accent: rgba(110, 200, 255, 0.16) !important;
+  --dsw-alias-interactive-bg-hover-solid: rgba(26, 38, 60, 0.92) !important;
+  --dsw-alias-interactive-bg-hover-danger: rgba(255, 92, 92, 0.14) !important;
+  --dsw-alias-interactive-bg-active: rgba(255, 255, 255, 0.10) !important;
+
+  /* states */
+  --dsw-alias-state-business-primary: rgb(110, 200, 255) !important;
+  --dsw-alias-state-business-tertiary: rgba(110, 200, 255, 0.16) !important;
+  --dsw-alias-state-error-primary: rgb(255, 92, 92) !important;
+  --dsw-alias-state-error-secondary: rgb(255, 124, 124) !important;
+  --dsw-alias-state-success-primary: rgb(88, 214, 168) !important;
+  --dsw-alias-state-success-secondary: rgb(120, 232, 190) !important;
+  --dsw-alias-state-success-tertiary: rgba(88, 214, 168, 0.14) !important;
+  --dsw-alias-state-warn-primary: rgb(255, 122, 69) !important;
+  --dsw-alias-state-warn-secondary: rgb(255, 158, 110) !important;
+  --dsw-alias-state-warn-tertiary: rgba(255, 122, 69, 0.14) !important;
+  --dsw-alias-state-warn-label: rgb(255, 150, 100) !important;
+
+  /* markdown */
+  --dsw-alias-markdown-code-block: rgba(8, 13, 22, 0.95) !important;
+  --dsw-alias-markdown-code-block-banner: rgba(16, 24, 38, 0.98) !important;
+  --dsw-alias-markdown-inline-code: rgba(21, 30, 46, 0.95) !important;
+  --dsw-alias-markdown-code-segment-selected: rgba(110, 200, 255, 0.16) !important;
+  --dsw-alias-markdown-code-segment-unselected: rgba(110, 200, 255, 0.05) !important;
+  --dsw-alias-markdown-placeholder: rgba(21, 30, 46, 0.95) !important;
+  --dsw-alias-markdown-tag: rgba(28, 40, 62, 0.95) !important;
+  --dsw-alias-markdown-citation: rgba(28, 40, 62, 0.95) !important;
+
+  /* specific surfaces */
+  --dsw-specific-sidebar-fill: rgba(6, 10, 18, 0.72) !important;
+  --dsw-specific-sidebar-nav-item-active: rgba(110, 200, 255, 0.14) !important;
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(110, 200, 255, 0.26) !important;
+  --dsw-specific-sidebar-nav-item-hover: rgba(255, 255, 255, 0.05) !important;
+  --dsw-specific-bubble: rgba(20, 30, 48, 0.92) !important;
+  /* 用户气泡：余烬橙，和助手气泡一眼分开 */
+  --dsw-specific-bubble-highlight: rgba(255, 122, 69, 0.16) !important;
+  --dsw-specific-input-major: rgba(16, 24, 38, 0.78) !important;
+  --dsw-specific-login-input: rgba(16, 24, 38, 0.95) !important;
+  --dsw-specific-menu: rgba(14, 22, 36, 0.98) !important;
+  --dsw-specific-selector: rgba(18, 27, 44, 0.95) !important;
+  --dsw-specific-tip: rgba(18, 27, 44, 0.95) !important;
+
+  /* scrollbar */
+  --dsh-scrollbar-thumb: rgba(255, 255, 255, 0.18) !important;
+  --dsh-scrollbar-thumb-hover: rgba(255, 255, 255, 0.28) !important;
+  --dsw-alias-scrollbar-bg-l1: rgba(255, 255, 255, 0.14) !important;
+  --dsw-alias-scrollbar-bg-l2: rgba(255, 255, 255, 0.16) !important;
+  --dsw-alias-scrollbar-hover-l1: rgba(255, 255, 255, 0.24) !important;
+  --dsw-alias-scrollbar-hover-l2: rgba(255, 255, 255, 0.26) !important;
+
+  /* toast / tooltip */
+  --dsw-alias-toast-bg: rgba(28, 40, 62, 0.97) !important;
+  --dsw-alias-tooltip-bg: rgba(28, 40, 62, 0.97) !important;
+}
+
+::selection {
+  background: rgba(110, 200, 255, 0.30) !important;
+  color: rgb(245, 249, 255) !important;
+}

@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#03050a"/>
+      <stop offset="0.40" stop-color="#081120"/>
+      <stop offset="0.72" stop-color="#102238"/>
+      <stop offset="1" stop-color="#153350"/>
+    </linearGradient>
+    <radialGradient id="emberGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffb27a" stop-opacity="0.55"/>
+      <stop offset="0.40" stop-color="#ff7a45" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#ff7a45" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="iceGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#bfe6ff" stop-opacity="0.45"/>
+      <stop offset="0.45" stop-color="#6ec8ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#6ec8ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffb98f" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ffb98f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb98f" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ffb98f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="tower" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#05090f"/>
+      <stop offset="0.45" stop-color="#111d30"/>
+      <stop offset="1" stop-color="#04070c"/>
+    </linearGradient>
+    <linearGradient id="ridge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1524"/>
+      <stop offset="1" stop-color="#04060b"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#sky)"/>
+
+  <!-- stars: cold white + a few ember sparks -->
+  <g fill="#cfe4ff">
+    <circle cx="86" cy="74" r="1.5" opacity="0.7"/><circle cx="168" cy="142" r="1.1" opacity="0.45"/>
+    <circle cx="252" cy="60" r="1.8" opacity="0.75"/><circle cx="330" cy="112" r="1" opacity="0.4"/>
+    <circle cx="462" cy="58" r="1.3" opacity="0.55"/><circle cx="548" cy="128" r="1.6" opacity="0.65"/>
+    <circle cx="640" cy="70" r="1.1" opacity="0.4"/><circle cx="742" cy="118" r="1.9" opacity="0.8"/>
+    <circle cx="836" cy="58" r="1.2" opacity="0.45"/><circle cx="928" cy="140" r="1.5" opacity="0.6"/>
+    <circle cx="1024" cy="76" r="1" opacity="0.35"/><circle cx="1214" cy="66" r="1.3" opacity="0.5"/>
+    <circle cx="1308" cy="132" r="1.1" opacity="0.4"/><circle cx="1402" cy="72" r="1.8" opacity="0.75"/>
+    <circle cx="1500" cy="126" r="1.2" opacity="0.45"/><circle cx="76" cy="238" r="1.1" opacity="0.35"/>
+    <circle cx="196" cy="304" r="1.4" opacity="0.5"/><circle cx="586" cy="252" r="1" opacity="0.3"/>
+    <circle cx="704" cy="326" r="1.3" opacity="0.45"/><circle cx="1566" cy="228" r="1.4" opacity="0.5"/>
+    <circle cx="1064" cy="268" r="1.2" opacity="0.4"/><circle cx="884" cy="212" r="1" opacity="0.3"/>
+  </g>
+  <g fill="#ffb08a">
+    <circle cx="128" cy="176" r="1.6" opacity="0.45"/><circle cx="512" cy="206" r="1.3" opacity="0.35"/>
+    <circle cx="980" cy="186" r="1.6" opacity="0.4"/><circle cx="1364" cy="212" r="1.2" opacity="0.3"/>
+    <circle cx="248" cy="356" r="1.5" opacity="0.3"/><circle cx="772" cy="286" r="1.1" opacity="0.28"/>
+  </g>
+
+  <!-- lighthouse halo (ember) -->
+  <ellipse cx="360" cy="712" rx="520" ry="240" fill="url(#emberGlow)" opacity="0.55"/>
+
+  <!-- beams -->
+  <path d="M360 212 L8 346 L8 258 Z" fill="url(#beamL)"/>
+  <path d="M360 212 L712 340 L712 254 Z" fill="url(#beamR)"/>
+
+  <!-- moonlight rim behind the figure (cold) -->
+  <ellipse cx="1188" cy="596" rx="250" ry="290" fill="url(#iceGlow)" opacity="0.55"/>
+
+  <!-- ridge + industrial silhouettes -->
+  <path d="M0 742 L96 716 L154 730 L228 702 L300 726 L392 706 L470 736 L560 714 L648 740 L742 720 L836 744 L934 718 L1030 742 L1128 716 L1224 740 L1320 714 L1420 742 L1512 720 L1600 738 L1600 900 L0 900 Z" fill="url(#ridge)"/>
+  <g fill="#060b13" opacity="0.9">
+    <rect x="1060" y="686" width="26" height="58" rx="3"/>
+    <rect x="1092" y="700" width="18" height="44" rx="3"/>
+    <rect x="1396" y="692" width="22" height="52" rx="3"/>
+    <rect x="1424" y="706" width="14" height="38" rx="3"/>
+    <circle cx="1073" cy="682" r="2.4" fill="#ffb27a" opacity="0.7"/>
+    <circle cx="1407" cy="688" r="2" fill="#ffb27a" opacity="0.55"/>
+  </g>
+
+  <!-- lighthouse -->
+  <g>
+    <path d="M332 748 L344 268 L376 268 L388 748 Z" fill="url(#tower)"/>
+    <path d="M344 452 L376 452 L378 520 L342 520 Z" fill="#6ec8ff" opacity="0.10"/>
+    <path d="M342 600 L378 600 L380 656 L340 656 Z" fill="#ff9f5a" opacity="0.10"/>
+    <rect x="336" y="252" width="48" height="16" rx="5" fill="#0a1422"/>
+    <rect x="346" y="204" width="28" height="48" rx="7" fill="#0a1422"/>
+    <circle cx="360" cy="228" r="8" fill="#ffd9b8"/>
+    <circle cx="360" cy="228" r="30" fill="url(#emberGlow)" opacity="0.95"/>
+    <rect x="332" y="744" width="56" height="10" rx="4" fill="#070c15"/>
+  </g>
+
+  <!-- figure: original silhouette, back view, twin pistols, rim-lit -->
+  <g transform="translate(1188 756)">
+    <!-- cold rim glow -->
+    <g filter="url(#soft)" opacity="0.55" fill="#6ec8ff">
+      <path d="M-2 -206 a27 27 0 1 0 0.1 0 z"/>
+      <path d="M-52 -150 q40 -18 52 -18 q12 0 52 18 l10 118 l-12 4 -14 -96 l-6 96 -8 138 h-24 l-10 -138 h-16 l-10 138 h-24 l-8 -138 -6 -96 -14 96 -12 -4 z"/>
+    </g>
+    <!-- body -->
+    <g fill="#04070c">
+      <!-- head -->
+      <path d="M-2 -206 a27 27 0 1 0 0.1 0 z"/>
+      <!-- hair, shoulder length -->
+      <path d="M-30 -214 q-8 44 4 66 l-10 34 h18 l6 -44 q10 10 18 0 l6 44 h18 l-10 -34 q12 -22 4 -66 q-12 -18 -27 -18 q-15 0 -27 18 z"/>
+      <!-- coat: shoulders → waist → hem -->
+      <path d="M-52 -150 q40 -18 52 -18 q12 0 52 18 l10 118 l-12 4 -14 -96 -6 96 -8 138 h-24 l-10 -138 h-16 l-10 138 h-24 l-8 -138 -6 -96 -14 96 -12 -4 z"/>
+    </g>
+    <!-- arms -->
+    <g fill="#04070c">
+      <path d="M-54 -146 l-16 96 14 6 18 -94 z"/>
+      <path d="M54 -146 l16 96 -14 6 -18 -94 z"/>
+    </g>
+    <!-- twin pistols (silhouette) with ember muzzle flashes -->
+    <g fill="#0a1220">
+      <path d="M-78 44 l30 -8 6 16 -30 10 z"/>
+      <path d="M-70 60 l12 4 -8 26 -12 -4 z"/>
+      <path d="M78 44 l-30 -8 -6 16 30 10 z"/>
+      <path d="M70 60 l-12 4 8 26 12 -4 z"/>
+    </g>
+    <circle cx="-92" cy="40" r="3.4" fill="#ff9f5a" opacity="0.85"/>
+    <circle cx="92" cy="40" r="3.4" fill="#ff9f5a" opacity="0.85"/>
+    <circle cx="-92" cy="40" r="9" fill="url(#emberGlow)" opacity="0.8"/>
+    <circle cx="92" cy="40" r="9" fill="url(#emberGlow)" opacity="0.8"/>
+    <!-- ground shadow -->
+    <ellipse cx="0" cy="4" rx="74" ry="10" fill="#03050a" opacity="0.6"/>
+  </g>
+
+  <!-- drifting dust: cold + ember -->
+  <g fill="#cfe4ff">
+    <circle cx="1046" cy="640" r="2.6" opacity="0.28"/><circle cx="1104" cy="700" r="1.8" opacity="0.2"/>
+    <circle cx="1268" cy="636" r="2.2" opacity="0.24"/><circle cx="1330" cy="704" r="1.7" opacity="0.18"/>
+  </g>
+  <g fill="#ffb08a">
+    <circle cx="962" cy="712" r="2.2" opacity="0.3"/><circle cx="1288" cy="722" r="1.8" opacity="0.22"/>
+    <circle cx="1140" cy="470" r="1.6" opacity="0.26"/><circle cx="1252" cy="452" r="1.4" opacity="0.2"/>
+  </g>
+</svg>

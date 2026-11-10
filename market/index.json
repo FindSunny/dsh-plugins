@@ -70,7 +70,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "78b4f2bc9bf4b7a927a2f9445a1c87cf81bd199c",
+            "commit": "0000000000000000000000000000000000000000",
             "path": "dsh-notify"
           }
         }
@@ -107,8 +107,47 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "78b4f2bc9bf4b7a927a2f9445a1c87cf81bd199c",
+            "commit": "0000000000000000000000000000000000000000",
             "path": "dsh-theme-mao"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dsh-theme-lingcage-maiduo",
+      "title": {
+        "en": "Ling Cage: Maiduo (frost & ember)",
+        "zh": "灵笼 · 麦朵「霜与余烬」"
+      },
+      "description": {
+        "en": "Frost-blue and ember base over an original back-lit silhouette with twin pistols.",
+        "zh": "冰蓝 + 余烬橙的深夜底色，背景是原创的背光双枪剪影。"
+      },
+      "author": "Suo Jianfei",
+      "homepage": "https://github.com/FindSunny/dsh-plugins/tree/main/dsh-theme-lingcage-maiduo",
+      "repository": {
+        "url": "https://github.com/FindSunny/dsh-plugins",
+        "directory": "dsh-theme-lingcage-maiduo"
+      },
+      "metadata": {
+        "category": "theme",
+        "keywords": [
+          "theme",
+          "skin",
+          "dark",
+          "lingcage",
+          "silhouette"
+        ]
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794214606,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/FindSunny/dsh-plugins",
+            "commit": "0000000000000000000000000000000000000000",
+            "path": "dsh-theme-lingcage-maiduo"
           }
         }
       ]
