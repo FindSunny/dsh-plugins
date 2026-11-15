@@ -76,7 +76,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "fbe76c72b60bd863f45e0321d3c802dd02848519",
+            "commit": "1e1d7e074b38a1162efea8d36c7df6796aac5d59",
             "path": "dsh-notify"
           }
         }
@@ -115,12 +115,12 @@
       },
       "versions": [
         {
-          "version": "0.3.0",
-          "publishTimestamp": 1794709551,
+          "version": "0.4.0",
+          "publishTimestamp": 1794713169,
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "fbe76c72b60bd863f45e0321d3c802dd02848519",
+            "commit": "1e1d7e074b38a1162efea8d36c7df6796aac5d59",
             "path": "dsh-sit-alarm"
           }
         }
@@ -157,7 +157,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "fbe76c72b60bd863f45e0321d3c802dd02848519",
+            "commit": "1e1d7e074b38a1162efea8d36c7df6796aac5d59",
             "path": "dsh-theme-mao"
           }
         }
@@ -196,7 +196,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "fbe76c72b60bd863f45e0321d3c802dd02848519",
+            "commit": "1e1d7e074b38a1162efea8d36c7df6796aac5d59",
             "path": "dsh-theme-lingcage-maiduo"
           }
         }
