@@ -2,8 +2,9 @@
  * dsh-sit-alarm — Host half.
  *
  * 状态机：40 分钟专注 → 第 37 分钟提醒 → 40 分钟到点自动进入 5 分钟休息
- * → 休息结束只发提醒、不自动开始下一轮。全程由 Host 计时，页面关了也照走；
- * 浏览器面板通过 Connection 的自定义 RPC 通道 `/sit-alarm` 轮询状态、下达指令。
+ * → 休息结束前 1 分钟预告 → 休息结束只发提醒、不自动开始下一轮。
+ * 全程由 Host 计时，页面关了也照走；浏览器面板通过 `/api/sit-alarm` 精确路由
+ * 轮询状态、下达指令。跨天的轮次统计单独落盘，重启不丢。
  *
  * 通知走 PowerShell + WinRT 吐司（Desktop 宿主是纯 Node 进程，没有 electron.Notification）。
  */
@@ -14,12 +15,36 @@ import { dirname, join } from 'node:path'
 
 export const name = 'sit-alarm'
 
-/** Host Connection supplies the RPC channel that feeds the browser panel. */
+/** Host Connection supplies the fetch route that feeds the browser panel. */
 export const inject = ['connection', 'webServer']
 
 const CONFIG_PATH = join(homedir(), '.dsh', 'sit-alarm.json')
-const DEFAULTS = { workMinutes: 40, warnMinutes: 3, breakMinutes: 5, sound: true, autoStartOnLoad: false }
+const STATS_PATH = join(homedir(), '.dsh', 'sit-alarm-stats.json')
+const STATS_KEEP_DAYS = 45
+const DEFAULTS = {
+  workMinutes: 40,
+  warnMinutes: 3,
+  breakMinutes: 5,
+  breakWarnMinutes: 1,
+  sound: true,
+  autoStartOnLoad: false,
+}
 const MINUTE = 60000
+
+/** 补零到两位。 */
+function pad2(value) {
+  return String(value).padStart(2, '0')
+}
+
+/** 本地日期键 YYYY-MM-DD；跨天统计按本地时区切，不按 UTC。 */
+function dayKey(date = new Date()) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+}
+
+/** 一天的空统计。 */
+function emptyDay() {
+  return { rounds: 0, focusSeconds: 0, breaks: 0, breakSeconds: 0 }
+}
 
 /** 四舍五入到毫秒，同时挡住 NaN。 */
 function minutesToMs(value, fallback) {
@@ -40,6 +65,7 @@ function loadConfig() {
       workMinutes: Number(parsed.workMinutes) > 0 ? Number(parsed.workMinutes) : DEFAULTS.workMinutes,
       warnMinutes: Number(parsed.warnMinutes) >= 0 ? Number(parsed.warnMinutes) : DEFAULTS.warnMinutes,
       breakMinutes: Number(parsed.breakMinutes) > 0 ? Number(parsed.breakMinutes) : DEFAULTS.breakMinutes,
+      breakWarnMinutes: Number(parsed.breakWarnMinutes) >= 0 ? Number(parsed.breakWarnMinutes) : DEFAULTS.breakWarnMinutes,
       sound: parsed.sound === undefined ? DEFAULTS.sound : Boolean(parsed.sound),
       autoStartOnLoad: parsed.autoStartOnLoad === true,
     }
@@ -54,6 +80,30 @@ function saveConfig(config) {
     writeFileSync(CONFIG_PATH, `${JSON.stringify(config, null, 2)}\n`, 'utf8')
   } catch {
     /* 写不了配置只影响下次启动，不影响本轮计时 */
+  }
+}
+
+/** 读统计文件；坏数据当成空的，别让统计拖垮计时。 */
+function loadStats() {
+  try {
+    if (!existsSync(STATS_PATH)) return { version: 1, days: {} }
+    const parsed = JSON.parse(readFileSync(STATS_PATH, 'utf8').replace(/^\uFEFF/, ''))
+    const days = parsed && typeof parsed.days === 'object' && parsed.days !== null ? parsed.days : {}
+    return { version: 1, days }
+  } catch {
+    return { version: 1, days: {} }
+  }
+}
+
+/** 写统计文件，顺手裁掉过期天数。 */
+function saveStats(stats) {
+  try {
+    const keys = Object.keys(stats.days).sort()
+    while (keys.length > STATS_KEEP_DAYS) delete stats.days[keys.shift()]
+    mkdirSync(dirname(STATS_PATH), { recursive: true })
+    writeFileSync(STATS_PATH, `${JSON.stringify(stats, null, 2)}\n`, 'utf8')
+  } catch {
+    /* 统计写不了不影响计时 */
   }
 }
 
@@ -100,20 +150,46 @@ export function apply(ctx) {
       /* 调试日志写不了就算 */
     }
   }
-  debug(`apply v3 inject connection=${typeof ctx.connection} webServer=${typeof ctx.webServer}`)
+  debug(`apply v4 inject connection=${typeof ctx.connection} webServer=${typeof ctx.webServer}`)
   let cfg = loadConfig()
+  const stats = loadStats()
   let phase = 'idle'
   let round = 0
   let startedAt = 0
   let endsAt = 0
   let warnAt = 0
   let warned = false
+  let breakWarnAt = 0
+  let breakWarned = false
   let pausedFrom = null
   let remainingMs = 0
+  /** 本轮已累计的专注毫秒（暂停时结算，避免把暂停算进专注）。 */
+  let focusMs = 0
+  /** 本次休息已累计的毫秒。 */
+  let breakMs = 0
+  /** 当前这一段（专注或休息）的起始时刻，用于累计毫秒。 */
+  let segmentStart = 0
   let timer
 
   const log = (...args) => {
     if (process.env.DSH_SIT_ALARM_DEBUG) console.log('[sit-alarm]', ...args)
+  }
+
+  /** 今天这一格统计（只读，没有就返回空）。 */
+  function todayStats() {
+    const day = stats.days[dayKey()]
+    return day && typeof day === 'object' ? day : emptyDay()
+  }
+
+  /** 往今天的统计上累加，落盘。 */
+  function bumpToday(patch) {
+    const key = dayKey()
+    const day = stats.days[key] && typeof stats.days[key] === 'object' ? stats.days[key] : emptyDay()
+    for (const [field, value] of Object.entries(patch)) day[field] = (Number(day[field]) || 0) + value
+    stats.days[key] = day
+    saveStats(stats)
+    debug(`stats ${key} ${JSON.stringify(day)}`)
+    return day
   }
 
   function notify(title, body) {
@@ -146,7 +222,8 @@ export function apply(ctx) {
       const target = warned || warnAt <= 0 ? endsAt : Math.min(warnAt, endsAt)
       timer = setTimeout(tick, Math.max(0, target - Date.now()))
     } else if (phase === 'break') {
-      timer = setTimeout(tick, Math.max(0, endsAt - Date.now()))
+      const target = breakWarned || breakWarnAt <= 0 ? endsAt : Math.min(breakWarnAt, endsAt)
+      timer = setTimeout(tick, Math.max(0, target - Date.now()))
     }
   }
 
@@ -165,26 +242,58 @@ export function apply(ctx) {
       scheduleNext()
       return
     }
-    if (phase === 'break' && now >= endsAt) endBreak()
+    if (phase === 'break') {
+      if (!breakWarned && breakWarnAt > 0 && now >= breakWarnAt) {
+        breakWarned = true
+        const left = cfg.breakWarnMinutes >= 1 ? `${Math.round(cfg.breakWarnMinutes)} 分钟` : '不到 1 分钟'
+        notify('休息快结束了', `还有${left}，收个尾准备回来。`)
+      }
+      if (now >= endsAt) {
+        endBreak()
+        return
+      }
+      scheduleNext()
+    }
+  }
+
+  /** 把这一段休息时间结算进今天统计。 */
+  function flushBreak(completed) {
+    if (phase === 'break') breakMs += Math.max(0, Date.now() - segmentStart)
+    if (breakMs <= 0) return
+    bumpToday({
+      breakSeconds: Math.round(breakMs / 1000),
+      ...completed ? { breaks: 1 } : {},
+    })
+    breakMs = 0
   }
 
   function beginBreak() {
     clearTimer()
+    focusMs += Math.max(0, Date.now() - segmentStart)
+    bumpToday({ rounds: 1, focusSeconds: Math.round(focusMs / 1000) })
+    focusMs = 0
     phase = 'break'
     startedAt = Date.now()
     endsAt = startedAt + minutesToMs(cfg.breakMinutes, DEFAULTS.breakMinutes)
+    breakWarnAt = cfg.breakWarnMinutes > 0 ? endsAt - Math.round(cfg.breakWarnMinutes * MINUTE) : 0
+    breakWarned = false
+    breakMs = 0
+    segmentStart = startedAt
     notify(`休息 ${Math.round(cfg.breakMinutes)} 分钟`, '站起来走两步、拉伸肩颈，倒计时结束会再提醒你。')
     scheduleNext()
   }
 
   function endBreak() {
     clearTimer()
+    flushBreak(true)
     phase = 'breakDone'
     endsAt = 0
+    breakWarnAt = 0
     notify('休息达标', '可以开始下一轮了。不会自动开始，回来点一下就行。')
   }
 
   function start() {
+    if (phase === 'break') flushBreak(false)
     clearTimer()
     phase = 'working'
     round += 1
@@ -192,14 +301,19 @@ export function apply(ctx) {
     endsAt = startedAt + minutesToMs(cfg.workMinutes, DEFAULTS.workMinutes)
     warnAt = cfg.warnMinutes > 0 ? endsAt - minutesToMs(cfg.warnMinutes, DEFAULTS.warnMinutes) : 0
     warned = false
+    focusMs = 0
+    segmentStart = startedAt
     scheduleNext()
   }
 
   function pause() {
     if (phase !== 'working' && phase !== 'break') return false
     clearTimer()
+    const now = Date.now()
+    if (phase === 'working') focusMs += Math.max(0, now - segmentStart)
+    else breakMs += Math.max(0, now - segmentStart)
     pausedFrom = phase
-    remainingMs = Math.max(0, endsAt - Date.now())
+    remainingMs = Math.max(0, endsAt - now)
     phase = 'paused'
     return true
   }
@@ -210,21 +324,29 @@ export function apply(ctx) {
     pausedFrom = null
     const now = Date.now()
     endsAt = now + remainingMs
+    segmentStart = now
     if (phase === 'working') {
       warnAt = cfg.warnMinutes > 0 ? endsAt - minutesToMs(cfg.warnMinutes, DEFAULTS.warnMinutes) : 0
+    } else if (phase === 'break') {
+      breakWarnAt = cfg.breakWarnMinutes > 0 ? endsAt - Math.round(cfg.breakWarnMinutes * MINUTE) : 0
     }
     scheduleNext()
     return true
   }
 
   function cancel() {
+    if (phase === 'break') flushBreak(false)
     clearTimer()
     phase = 'idle'
     pausedFrom = null
     remainingMs = 0
     endsAt = 0
     warnAt = 0
+    breakWarnAt = 0
     warned = false
+    breakWarned = false
+    focusMs = 0
+    breakMs = 0
   }
 
   function live() {
@@ -233,17 +355,26 @@ export function apply(ctx) {
 
   function snapshot() {
     const now = Date.now()
+    const today = todayStats()
     return {
       phase,
       round,
       remainingMs: live() ? Math.max(0, endsAt - now) : 0,
       endsAt: live() ? endsAt : 0,
       warnAt: phase === 'working' ? warnAt : 0,
+      breakWarnAt: phase === 'break' ? breakWarnAt : 0,
       workMinutes: cfg.workMinutes,
       warnMinutes: cfg.warnMinutes,
       breakMinutes: cfg.breakMinutes,
+      breakWarnMinutes: cfg.breakWarnMinutes,
       startedAt,
       now,
+      stats: {
+        rounds: Number(today.rounds) || 0,
+        focusMinutes: Math.round((Number(today.focusSeconds) || 0) / 60),
+        breaks: Number(today.breaks) || 0,
+        breakMinutes: Math.round((Number(today.breakSeconds) || 0) / 60),
+      },
     }
   }
 
@@ -252,12 +383,16 @@ export function apply(ctx) {
       workMinutes: Number(next.workMinutes) > 0 ? Number(next.workMinutes) : cfg.workMinutes,
       warnMinutes: Number(next.warnMinutes) >= 0 ? Number(next.warnMinutes) : cfg.warnMinutes,
       breakMinutes: Number(next.breakMinutes) > 0 ? Number(next.breakMinutes) : cfg.breakMinutes,
+      breakWarnMinutes: Number(next.breakWarnMinutes) >= 0 ? Number(next.breakWarnMinutes) : cfg.breakWarnMinutes,
       sound: next.sound === undefined ? cfg.sound : Boolean(next.sound),
       autoStartOnLoad: next.autoStartOnLoad === undefined ? cfg.autoStartOnLoad : Boolean(next.autoStartOnLoad),
     }
     log('config:', JSON.stringify(cfg))
     if (phase === 'working') {
       warnAt = cfg.warnMinutes > 0 ? endsAt - minutesToMs(cfg.warnMinutes, DEFAULTS.warnMinutes) : 0
+      scheduleNext()
+    } else if (phase === 'break') {
+      breakWarnAt = cfg.breakWarnMinutes > 0 ? endsAt - Math.round(cfg.breakWarnMinutes * MINUTE) : 0
       scheduleNext()
     }
   }
@@ -281,7 +416,7 @@ export function apply(ctx) {
         return { ok: true }
       case 'config': {
         const next = { ...cfg }
-        for (const key of ['workMinutes', 'warnMinutes', 'breakMinutes', 'sound']) {
+        for (const key of ['workMinutes', 'warnMinutes', 'breakMinutes', 'breakWarnMinutes', 'sound']) {
           if (payload[key] !== undefined) next[key] = payload[key]
         }
         applyConfig(next)
@@ -306,7 +441,6 @@ export function apply(ctx) {
   })
 
   try {
-    let lastProbe = 0
     const disposer = ctx.connection.fetch.register({
       path: '/api/sit-alarm',
       methods: ['POST'],

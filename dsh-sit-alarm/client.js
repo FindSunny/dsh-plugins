@@ -21,6 +21,8 @@ window.__ModuleLoader__.load({
       paused: '已暂停',
       break: '休息中',
       breakDone: '休息达标',
+      breakWarn: '休息快结束了',
+      stats: '今日 {r} 轮 · 专注 {m} 分',
       start: '开始 {n} 分钟',
       startNext: '开始下一轮',
       pause: '暂停',
@@ -44,6 +46,8 @@ window.__ModuleLoader__.load({
       paused: 'Paused',
       break: 'On a break',
       breakDone: 'Break complete',
+      breakWarn: 'Break almost over',
+      stats: 'Today {r} rounds · {m} min focus',
       start: 'Start {n} min',
       startNext: 'Start next round',
       pause: 'Pause',
@@ -138,10 +142,12 @@ window.__ModuleLoader__.load({
       const progress = total > 0 ? Math.min(1, Math.max(0, 1 - remaining / total)) : 0
       const warnMs = (state.warnMinutes || 0) * 60000
       const inWarn = phase === 'working' && warnMs > 0 && remaining <= warnMs
-      const accentColor = inWarn ? 'var(--dsw-alias-state-warning-primary, #e0a100)' : ACCENT
+      const breakWarnMs = (state.breakWarnMinutes || 0) * 60000
+      const inBreakWarn = phase === 'break' && breakWarnMs > 0 && remaining <= breakWarnMs
+      const accentColor = inWarn || inBreakWarn ? 'var(--dsw-alias-state-warning-primary, #e0a100)' : ACCENT
       const label = phase === 'working'
         ? (inWarn ? t('warnSoon') : t('working'))
-        : phase === 'break' ? t('break')
+        : phase === 'break' ? (inBreakWarn ? t('breakWarn') : t('break'))
           : phase === 'paused' ? t('paused')
             : phase === 'breakDone' ? t('breakDone') : t('idle')
       const timeText = live ? clock(remaining) : phase === 'breakDone' ? '✓' : '—'
@@ -193,6 +199,10 @@ window.__ModuleLoader__.load({
         : phase === 'breakDone' ? t('breakDoneHint')
           : phase === 'idle' ? t('idleHint').replace('{w}', String(state.workMinutes || 40))
             : t('round').replace('{n}', String(state.round || 1))
+      const today = state.stats || { rounds: 0, focusMinutes: 0 }
+      const statsLine = t('stats')
+        .replace('{r}', String(today.rounds || 0))
+        .replace('{m}', String(today.focusMinutes || 0))
 
       return h('div', {
         style: {
@@ -233,7 +243,13 @@ window.__ModuleLoader__.load({
       state.online === false
         ? h('div', { style: { marginTop: 8, fontSize: 11, color: '#e5484d', lineHeight: '16px' } }, `${t('offline')}${state.error ? ` · ${state.error}` : ''}`)
         : null,
-      h('div', { style: { marginTop: 8, fontSize: 11, color: MUTED, lineHeight: '16px' } }, hint))
+      h('div', { style: { marginTop: 8, fontSize: 11, color: MUTED, lineHeight: '16px' } }, hint),
+      h('div', {
+        style: {
+          marginTop: 4, fontSize: 10.5, color: MUTED, lineHeight: '14px',
+          fontVariantNumeric: 'tabular-nums', opacity: 0.9,
+        },
+      }, statsLine))
     }
 
     return {
@@ -249,7 +265,8 @@ window.__ModuleLoader__.load({
 
         const store = createStore({
           phase: 'idle', round: 0, remainingMs: 0, endsAt: 0, warnAt: 0,
-          workMinutes: 40, warnMinutes: 3, breakMinutes: 5,
+          workMinutes: 40, warnMinutes: 3, breakMinutes: 5, breakWarnMinutes: 0,
+          stats: { rounds: 0, focusMinutes: 0, breaks: 0, breakMinutes: 0 },
           online: false, error: null, panelOpen: true,
         })
 

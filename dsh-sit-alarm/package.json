@@ -1,6 +1,6 @@
 {
   "name": "dsh-sit-alarm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Sit reminder: 40-minute focus rounds with a 5-minute break, a floating countdown panel, and Windows desktop toasts.",
