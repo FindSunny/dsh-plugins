@@ -42,7 +42,7 @@ https://raw.githubusercontent.com/FindSunny/dsh-plugins/main/market/index.json
 { "workMinutes": 40, "warnMinutes": 3, "breakMinutes": 5, "breakWarnMinutes": 1, "sound": true, "gamingGuard": true }
 ```
 
-`gamingGuard` 默认开：全屏游戏 / 全屏视频 / 演示时跳过吐司（只写日志），不打扰；想要边玩边收提醒就设 `false`。测试统计落在 `~/.dsh/sit-alarm-stats.json`。
+`gamingGuard` 默认开：D3D 独占全屏 / 演示模式时跳过吐司（只写日志），全屏看视频不受影响。无边框游戏要彻底安静再加 `"guardFullscreenWindows": true`。测试统计落在 `~/.dsh/sit-alarm-stats.json`。
 
 ## 平台
 
