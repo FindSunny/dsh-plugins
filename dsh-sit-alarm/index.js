@@ -27,6 +27,7 @@ const DEFAULTS = {
   breakMinutes: 5,
   breakWarnMinutes: 1,
   sound: true,
+  gamingGuard: true,
   autoStartOnLoad: false,
 }
 const MINUTE = 60000
@@ -67,6 +68,7 @@ function loadConfig() {
       breakMinutes: Number(parsed.breakMinutes) > 0 ? Number(parsed.breakMinutes) : DEFAULTS.breakMinutes,
       breakWarnMinutes: Number(parsed.breakWarnMinutes) >= 0 ? Number(parsed.breakWarnMinutes) : DEFAULTS.breakWarnMinutes,
       sound: parsed.sound === undefined ? DEFAULTS.sound : Boolean(parsed.sound),
+      gamingGuard: parsed.gamingGuard === undefined ? DEFAULTS.gamingGuard : Boolean(parsed.gamingGuard),
       autoStartOnLoad: parsed.autoStartOnLoad === true,
     }
   } catch {
@@ -123,13 +125,51 @@ function powershellPath() {
   return existsSync(absolute) ? absolute : 'powershell.exe'
 }
 
-function buildToastScript(title, body, sound) {
+/**
+ * 全屏/占用时的护栏：Win32 自带的「现在能不能打扰我」判断。
+ * 退出码 3 = 被护栏拦下（没弹），Node 侧只记日志。
+ */
+function buildGuardLines() {
+  const typeDef = 'using System; using System.Runtime.InteropServices; '
+    + 'public static class NS { '
+    + '[DllImport("shell32.dll")] public static extern int SHQueryUserNotificationState(out int state); '
+    + '[DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow(); '
+    + '[DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r); '
+    + '[DllImport("user32.dll")] public static extern int GetWindowLong(IntPtr h, int i); '
+    + '[DllImport("user32.dll")] public static extern int GetSystemMetrics(int i); '
+    + '[StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left; public int Top; public int Right; public int Bottom; } '
+    + '}'
+  return [
+    `Add-Type -TypeDefinition '${typeDef}'`,
+    '$st = 0',
+    '[void][NS]::SHQueryUserNotificationState([ref]$st)',
+    // 2=BUSY 3=D3D 独占全屏 4=演示模式：这时别弹
+    '$skip = $st -eq 2 -or $st -eq 3 -or $st -eq 4',
+    'if (-not $skip) {',
+    '  $h = [NS]::GetForegroundWindow()',
+    '  if ($h -ne [IntPtr]::Zero) {',
+    '    $rect = New-Object NS+RECT',
+    '    [void][NS]::GetWindowRect($h, [ref]$rect)',
+    '    $style = [NS]::GetWindowLong($h, -16)',
+    '    $caption = ($style -band 0x00C00000) -ne 0',
+    '    $sw = [NS]::GetSystemMetrics(0)',
+    '    $sh = [NS]::GetSystemMetrics(1)',
+    // 无标题栏 + 正好铺满主屏 = 无边框全屏（很多游戏这么跑）
+    '    if ((-not $caption) -and ([Math]::Abs($rect.Left) -le 2) -and ([Math]::Abs($rect.Top) -le 2) -and ([Math]::Abs(($rect.Right - $rect.Left) - $sw) -le 2) -and ([Math]::Abs(($rect.Bottom - $rect.Top) - $sh) -le 2)) { $skip = $true }',
+    '  }',
+    '}',
+    'if ($skip) { exit 3 }',
+  ]
+}
+
+function buildToastScript(title, body, sound, guard) {
   const audio = sound ? '<audio src="ms-winsoundevent:Notification.Reminder" />' : '<audio silent="true" />'
   const xml = '<toast duration="long"><visual><binding template="ToastGeneric">'
     + `<text>${xmlEscape(title)}</text><text>${xmlEscape(body)}</text>`
     + `</binding></visual>${audio}</toast>`
   return [
     "$ErrorActionPreference = 'Stop'",
+    ...guard ? buildGuardLines() : [],
     `$xmlText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${Buffer.from(xml, 'utf8').toString('base64')}'))`,
     '[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null',
     '[Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] > $null',
@@ -210,13 +250,17 @@ export function apply(ctx) {
     let child
     try {
       child = spawn(powershellPath(), ['-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden',
-        '-EncodedCommand', Buffer.from(buildToastScript(title, body, cfg.sound !== false), 'utf16le').toString('base64')],
+        '-EncodedCommand', Buffer.from(buildToastScript(title, body, cfg.sound !== false, cfg.gamingGuard !== false), 'utf16le').toString('base64')],
       { stdio: 'ignore', windowsHide: true })
     } catch {
       return
     }
     children.add(child)
-    child.on('exit', () => { children.delete(child) })
+    child.on('exit', (code) => {
+      children.delete(child)
+      debug(`toast exit ${code}`)
+      if (code === 3) debug('toast skipped: fullscreen or busy')
+    })
     child.on('error', () => { children.delete(child) })
   }
 
@@ -425,6 +469,7 @@ export function apply(ctx) {
       breakMinutes: Number(next.breakMinutes) > 0 ? Number(next.breakMinutes) : cfg.breakMinutes,
       breakWarnMinutes: Number(next.breakWarnMinutes) >= 0 ? Number(next.breakWarnMinutes) : cfg.breakWarnMinutes,
       sound: next.sound === undefined ? cfg.sound : Boolean(next.sound),
+      gamingGuard: next.gamingGuard === undefined ? cfg.gamingGuard : Boolean(next.gamingGuard),
       autoStartOnLoad: next.autoStartOnLoad === undefined ? cfg.autoStartOnLoad : Boolean(next.autoStartOnLoad),
     }
     log('config:', JSON.stringify(cfg))
@@ -460,7 +505,7 @@ export function apply(ctx) {
         return { ok: true }
       case 'config': {
         const next = { ...cfg }
-        for (const key of ['workMinutes', 'warnMinutes', 'breakMinutes', 'breakWarnMinutes', 'sound']) {
+        for (const key of ['workMinutes', 'warnMinutes', 'breakMinutes', 'breakWarnMinutes', 'sound', 'gamingGuard']) {
           if (payload[key] !== undefined) next[key] = payload[key]
         }
         applyConfig(next)

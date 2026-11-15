@@ -39,10 +39,10 @@ https://raw.githubusercontent.com/FindSunny/dsh-plugins/main/market/index.json
 `~/.dsh/sit-alarm.json`，保存即生效（宿主监听文件，不用重启）：
 
 ```json
-{ "workMinutes": 40, "warnMinutes": 3, "breakMinutes": 5, "breakWarnMinutes": 1, "sound": true }
+{ "workMinutes": 40, "warnMinutes": 3, "breakMinutes": 5, "breakWarnMinutes": 1, "sound": true, "gamingGuard": true }
 ```
 
-统计落在 `~/.dsh/sit-alarm-stats.json`，按本地日期分桶，保留 45 天。
+`gamingGuard` 默认开：全屏游戏 / 全屏视频 / 演示时跳过吐司（只写日志），不打扰；想要边玩边收提醒就设 `false`。测试统计落在 `~/.dsh/sit-alarm-stats.json`。
 
 ## 平台
 
