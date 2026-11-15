@@ -43,7 +43,7 @@ function dayKey(date = new Date()) {
 
 /** 一天的空统计。 */
 function emptyDay() {
-  return { rounds: 0, focusSeconds: 0, breaks: 0, breakSeconds: 0 }
+  return { rounds: 0, focusSeconds: 0, breaks: 0, breakSeconds: 0, skips: 0 }
 }
 
 /** 四舍五入到毫秒，同时挡住 NaN。 */
@@ -236,7 +236,7 @@ export function apply(ctx) {
         notify(`${Math.round(cfg.warnMinutes)} 分钟后该站起来了`, `这一轮还剩 ${Math.round(cfg.warnMinutes)} 分钟，收个尾。`)
       }
       if (now >= endsAt) {
-        beginBreak()
+        finishWork()
         return
       }
       scheduleNext()
@@ -256,22 +256,31 @@ export function apply(ctx) {
     }
   }
 
-  /** 把这一段休息时间结算进今天统计。 */
+  /** 把这一段休息时间结算进今天统计。提前结束记一次 skip。 */
   function flushBreak(completed) {
     if (phase === 'break') breakMs += Math.max(0, Date.now() - segmentStart)
     if (breakMs <= 0) return
     bumpToday({
       breakSeconds: Math.round(breakMs / 1000),
-      ...completed ? { breaks: 1 } : {},
+      ...completed ? { breaks: 1 } : { skips: 1 },
     })
     breakMs = 0
   }
 
-  function beginBreak() {
+  /** 专注跑完：记账、停在 workDone 等人工确认，不自动进休息。 */
+  function finishWork() {
     clearTimer()
     focusMs += Math.max(0, Date.now() - segmentStart)
     bumpToday({ rounds: 1, focusSeconds: Math.round(focusMs / 1000) })
     focusMs = 0
+    phase = 'workDone'
+    endsAt = 0
+    warnAt = 0
+    notify(`专注 ${Math.round(cfg.workMinutes)} 分钟完成`, `点「开始休息」进入 ${Math.round(cfg.breakMinutes)} 分钟休息。`)
+  }
+
+  function beginBreak() {
+    clearTimer()
     phase = 'break'
     startedAt = Date.now()
     endsAt = startedAt + minutesToMs(cfg.breakMinutes, DEFAULTS.breakMinutes)
@@ -374,6 +383,7 @@ export function apply(ctx) {
         focusMinutes: Math.round((Number(today.focusSeconds) || 0) / 60),
         breaks: Number(today.breaks) || 0,
         breakMinutes: Math.round((Number(today.breakSeconds) || 0) / 60),
+        skips: Number(today.skips) || 0,
       },
     }
   }
@@ -413,6 +423,10 @@ export function apply(ctx) {
       case 'finishBreak':
         if (phase !== 'break') return failure('not-on-break', '当前不在休息阶段')
         endBreak()
+        return { ok: true }
+      case 'startBreak':
+        if (phase !== 'workDone') return failure('not-work-done', '专注还没完成，先跑完这一轮')
+        beginBreak()
         return { ok: true }
       case 'config': {
         const next = { ...cfg }

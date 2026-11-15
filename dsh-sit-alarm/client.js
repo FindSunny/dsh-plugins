@@ -22,7 +22,10 @@ window.__ModuleLoader__.load({
       paused: '已暂停',
       break: '休息中',
       breakDone: '休息达标',
+      workDone: '专注完成',
       breakWarn: '休息快结束了',
+      startBreak: '开始休息 {n} 分钟',
+      workDoneHint: '点「开始休息」进入 {b} 分钟休息',
       start: '开始 {n} 分钟',
       startNext: '开始下一轮',
       pause: '暂停',
@@ -48,7 +51,10 @@ window.__ModuleLoader__.load({
       paused: 'Paused',
       break: 'On a break',
       breakDone: 'Break complete',
+      workDone: 'Focus done',
       breakWarn: 'Break almost over',
+      startBreak: 'Take {n} min break',
+      workDoneHint: 'Start a {b} min break when ready',
       start: 'Start {n} min',
       startNext: 'Start next round',
       pause: 'Pause',
@@ -155,8 +161,11 @@ window.__ModuleLoader__.load({
         ? (inWarn ? t('warnSoon') : t('working'))
         : phase === 'break' ? (inBreakWarn ? t('breakWarn') : t('break'))
           : phase === 'paused' ? t('paused')
-            : phase === 'breakDone' ? t('breakDone') : t('idle')
-      const timeText = live ? clock(remaining) : phase === 'breakDone' ? '✓' : '—'
+            : phase === 'breakDone' ? t('breakDone')
+              : phase === 'workDone' ? t('workDone') : t('idle')
+      const timeText = live
+        ? clock(remaining)
+        : phase === 'breakDone' || phase === 'workDone' ? '✓' : ''
       const act = props.act
       const today = state.stats || { rounds: 0, focusMinutes: 0 }
       const statsLine = t('stats')
@@ -218,6 +227,10 @@ window.__ModuleLoader__.load({
       } else if (phase === 'break') {
         actions.push(h('button', { key: 'next', type: 'button', style: primaryButton, onClick: () => act({ action: 'start' }) }, t('startNext')))
         actions.push(h('button', { key: 'finish', type: 'button', style: buttonBase, onClick: () => act({ action: 'finishBreak' }) }, t('finishBreak')))
+      } else if (phase === 'workDone') {
+        actions.push(h('button', { key: 'break', type: 'button', style: primaryButton, onClick: () => act({ action: 'startBreak' }) },
+          t('startBreak').replace('{n}', String(state.breakMinutes || 5))))
+        actions.push(h('button', { key: 'stop', type: 'button', style: buttonBase, onClick: () => act({ action: 'cancel' }) }, t('cancel')))
       } else if (phase === 'breakDone') {
         actions.push(h('button', { key: 'start', type: 'button', style: primaryButton, onClick: () => act({ action: 'start' }) }, t('startNext')))
       } else {
@@ -227,8 +240,9 @@ window.__ModuleLoader__.load({
 
       const hint = phase === 'break' ? t('breakHint')
         : phase === 'breakDone' ? t('breakDoneHint')
-          : phase === 'idle' ? t('idleHint').replace('{w}', String(state.workMinutes || 40))
-            : t('round').replace('{n}', String(state.round || 1))
+          : phase === 'workDone' ? t('workDoneHint').replace('{b}', String(state.breakMinutes || 5))
+            : phase === 'idle' ? t('idleHint').replace('{w}', String(state.workMinutes || 40))
+              : t('round').replace('{n}', String(state.round || 1))
 
       return h('div', {
         style: {
@@ -253,13 +267,13 @@ window.__ModuleLoader__.load({
             type: 'button', title: t('collapse'), onClick: props.close,
             style: { ...buttonBase, border: 'none', padding: '1px 3px', color: MUTED, fontSize: 11.5 },
           }, '✕'))),
-      h('div', {
+      timeText ? h('div', {
         style: {
           marginTop: 1, fontSize: 26, lineHeight: '32px', fontWeight: 600,
           fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
-          color: phase === 'breakDone' ? accentColor : FG,
+          color: phase === 'breakDone' || phase === 'workDone' ? accentColor : FG,
         },
-      }, timeText),
+      }, timeText) : null,
       h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, minHeight: 16 } },
         h('span', { style: { fontSize: 11, color: inWarn || inBreakWarn ? accentColor : MUTED } }, label),
         h('span', { style: { fontSize: 10.5, color: MUTED, whiteSpace: 'nowrap' } }, hint)),
