@@ -33,18 +33,21 @@ function publishTimestamp(name, version) {
 const notifyPkg = readJson(path.join(ROOT, 'dsh-notify', 'package.json'));
 const themePkg = readJson(path.join(ROOT, 'dsh-theme-mao', 'package.json'));
 const lingcagePkg = readJson(path.join(ROOT, 'dsh-theme-lingcage-maiduo', 'package.json'));
+const sitAlarmPkg = readJson(path.join(ROOT, 'dsh-sit-alarm', 'package.json'));
 const notifyIcon = fs.readFileSync(path.join(ROOT, 'dsh-notify', 'icon.png'));
+const sitAlarmIcon = fs.readFileSync(path.join(ROOT, 'dsh-sit-alarm', 'icon.svg'));
 
 const index = {
   format: 1,
   title: { en: "SUO's DSH Plugins", zh: '索剑飞的 DSH 插件' },
   description: {
-    en: 'Hand-made DeepSeek Harness plugins: Windows desktop notifications and a theme.',
-    zh: '自己做的 DSH 插件：Windows 桌面通知、主题。',
+    en: 'Hand-made DeepSeek Harness plugins: Windows desktop notifications, a sit reminder with a countdown panel, and themes.',
+    zh: '自己做的 DSH 插件：Windows 桌面通知、久坐提醒倒计时面板、主题。',
   },
   metadata: {
     categories: {
       notify: { title: { en: 'Notifications', zh: '通知' } },
+      health: { title: { en: 'Health', zh: '健康' } },
       theme: { title: { en: 'Themes', zh: '主题' } },
     },
     labels: {
@@ -75,6 +78,30 @@ const index = {
           publishTimestamp: publishTimestamp(notifyPkg.name, notifyPkg.version),
           // git 通道：commit 必须是 40 位小写 SHA，path 是仓库里的子目录
           source: { type: 'git', url: BASE, commit: process.env.DSH_MARKET_COMMIT ?? '0'.repeat(40), path: 'dsh-notify' },
+        },
+      ],
+    },
+    {
+      name: sitAlarmPkg.name,
+      title: { en: 'Sit reminder', zh: '久坐提醒' },
+      description: {
+        en: '40-minute focus rounds with a 5-minute break: a floating countdown panel, a heads-up at minute 37, automatic break timing, and desktop toasts. The next round never starts on its own.',
+        zh: '40 分钟专注 + 5 分钟活动：浮动倒计时面板，第 37 分钟提醒准备站起，休息结束只提示、不自动开始下一轮，全程桌面吐司。',
+      },
+      icon: `data:image/svg+xml;base64,${sitAlarmIcon.toString('base64')}`,
+      author: 'Suo Jianfei',
+      homepage: `${BASE}/tree/main/dsh-sit-alarm`,
+      repository: { url: BASE, directory: 'dsh-sit-alarm' },
+      metadata: {
+        category: 'health',
+        keywords: ['sit', 'reminder', 'countdown', 'break', 'pomodoro', 'desktop'],
+        labels: ['windows'],
+      },
+      versions: [
+        {
+          version: sitAlarmPkg.version,
+          publishTimestamp: publishTimestamp(sitAlarmPkg.name, sitAlarmPkg.version),
+          source: { type: 'git', url: BASE, commit: process.env.DSH_MARKET_COMMIT ?? '0'.repeat(40), path: 'dsh-sit-alarm' },
         },
       ],
     },
