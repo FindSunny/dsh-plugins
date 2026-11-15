@@ -1,0 +1,37 @@
+{
+  "name": "dsh-sit-alarm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sit reminder: 40-minute focus rounds with a 5-minute break, a floating countdown panel, and Windows desktop toasts.",
+  "license": "MIT",
+  "author": "Suo Jianfei",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  }
+}

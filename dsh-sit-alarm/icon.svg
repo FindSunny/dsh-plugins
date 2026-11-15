@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Sit reminder">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#2b3a67"/>
+  <circle cx="32" cy="29" r="15" fill="none" stroke="#e8eefc" stroke-width="3"/>
+  <path d="M32 20v9l6.5 5" stroke="#7aa2ff" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <rect x="19" y="50" width="26" height="3.2" rx="1.6" fill="#7aa2ff"/>
+</svg>

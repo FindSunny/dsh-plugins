@@ -1,0 +1,4 @@
+# dsh-sit-alarm: 40-minute focus rounds, floating countdown, desktop toasts.
+- insert:
+    - id: sit-alarm
+      name: 'dsh-sit-alarm'

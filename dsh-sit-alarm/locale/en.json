@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Sit reminder",
+    "description": "Countdown panel for 40-minute focus rounds plus 5-minute breaks: a heads-up at minute 37, a break that ends with a nudge, and never auto-starts the next round. Desktop toasts included.",
+    "detail": "docs/DETAIL.md"
+  }
+}
