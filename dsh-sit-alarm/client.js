@@ -1,9 +1,10 @@
 /**
  * dsh-sit-alarm — Client half.
  *
- * 右下角浮动倒计时面板：折叠成小圆片，展开是卡片。
- * 状态与指令都走 Host 的自定义 RPC 通道 `/sit-alarm`（Host 计时，页面刷新不丢）。
- * 第 37 分钟进入提醒窗口、以及阶段切换时，面板自动展开。
+ * 侧边栏底部的久坐提醒卡片：注册在 `sidebar.footer.action`（Settings 那一行上方），
+ * 和侧栏同宽，不占工作区。收起时是一行紧凑摘要；侧栏折成 rail 时是一个 ⏱ 按钮。
+ * 状态与指令都走 Host 的 `/api/sit-alarm` 精确路由，Host 计时，页面刷新不丢。
+ * 第 37 分钟进入提醒窗口、以及阶段切换时，卡片自动展开。
  */
 window.__ModuleLoader__.load({
   id: 'dsh-sit-alarm',
@@ -22,7 +23,6 @@ window.__ModuleLoader__.load({
       break: '休息中',
       breakDone: '休息达标',
       breakWarn: '休息快结束了',
-      stats: '今日 {r} 轮 · 专注 {m} 分',
       start: '开始 {n} 分钟',
       startNext: '开始下一轮',
       pause: '暂停',
@@ -35,8 +35,10 @@ window.__ModuleLoader__.load({
       round: '第 {n} 轮',
       offline: '未连接 DSH',
       collapse: '收起',
+      expand: '展开',
       idleHint: '开始一轮 {w} 分钟专注',
       breakDoneHint: '休息够了，随时可以开始下一轮',
+      stats: '今日 {r} 轮 · 专注 {m} 分',
     }
 
     const en = {
@@ -47,7 +49,6 @@ window.__ModuleLoader__.load({
       break: 'On a break',
       breakDone: 'Break complete',
       breakWarn: 'Break almost over',
-      stats: 'Today {r} rounds · {m} min focus',
       start: 'Start {n} min',
       startNext: 'Start next round',
       pause: 'Pause',
@@ -60,8 +61,10 @@ window.__ModuleLoader__.load({
       round: 'Round {n}',
       offline: 'Not connected',
       collapse: 'Collapse',
+      expand: 'Expand',
       idleHint: 'Start a {w} min focus round',
       breakDoneHint: 'Break complete — start the next round when ready',
+      stats: 'Today {r} rounds · {m} min focus',
     }
 
     function createStore(initial) {
@@ -100,21 +103,23 @@ window.__ModuleLoader__.load({
     }
 
     const ACCENT = 'var(--dsw-alias-state-business-primary, #4d6bfe)'
-    const FG = '#f3f4f6'
-    const MUTED = '#a8b0bb'
-    const CARD = 'rgba(20, 22, 27, 0.92)'
-    const BORDER = 'rgba(255,255,255,0.16)'
+    const WARN = 'var(--dsw-alias-state-warning-primary, #e0a100)'
+    const FG = 'var(--dsw-alias-label-primary, #eceff3)'
+    const MUTED = 'var(--dsw-alias-label-secondary, #9aa0a6)'
+    const CARD = 'rgba(127,127,127,0.14)'
+    const BORDER = 'var(--dsw-alias-border-l1, rgba(127,127,127,0.28))'
 
     const buttonBase = {
       border: `0.5px solid ${BORDER}`,
       background: 'transparent',
       color: FG,
-      borderRadius: 8,
-      padding: '5px 10px',
-      fontSize: 12,
-      lineHeight: '18px',
+      borderRadius: 7,
+      padding: '4px 9px',
+      fontSize: 11.5,
+      lineHeight: '16px',
       cursor: 'pointer',
       fontFamily: 'inherit',
+      whiteSpace: 'nowrap',
     }
     const primaryButton = {
       ...buttonBase,
@@ -133,6 +138,7 @@ window.__ModuleLoader__.load({
       }, [])
 
       const t = props.t || ((key) => key)
+      const wide = props.wide !== false
       const phase = state.phase
       const live = phase === 'working' || phase === 'break'
       const remaining = live ? Math.max(0, (state.endsAt || 0) - Date.now()) : 0
@@ -144,7 +150,7 @@ window.__ModuleLoader__.load({
       const inWarn = phase === 'working' && warnMs > 0 && remaining <= warnMs
       const breakWarnMs = (state.breakWarnMinutes || 0) * 60000
       const inBreakWarn = phase === 'break' && breakWarnMs > 0 && remaining <= breakWarnMs
-      const accentColor = inWarn || inBreakWarn ? 'var(--dsw-alias-state-warning-primary, #e0a100)' : ACCENT
+      const accentColor = inWarn || inBreakWarn ? WARN : ACCENT
       const label = phase === 'working'
         ? (inWarn ? t('warnSoon') : t('working'))
         : phase === 'break' ? (inBreakWarn ? t('breakWarn') : t('break'))
@@ -152,30 +158,54 @@ window.__ModuleLoader__.load({
             : phase === 'breakDone' ? t('breakDone') : t('idle')
       const timeText = live ? clock(remaining) : phase === 'breakDone' ? '✓' : '—'
       const act = props.act
+      const today = state.stats || { rounds: 0, focusMinutes: 0 }
+      const statsLine = t('stats')
+        .replace('{r}', String(today.rounds || 0))
+        .replace('{m}', String(today.focusMinutes || 0))
 
-      if (!state.panelOpen) {
-        return h('div', {
-          style: {
-            position: 'fixed', right: 18, bottom: 96, zIndex: 70, pointerEvents: 'auto',
-            display: 'flex', alignItems: 'center', gap: 6,
-          },
-        }, h('button', {
+      // 侧栏折成 56px rail 时只留一个按钮，点一下把侧栏展开。
+      if (!wide) {
+        return h('button', {
           type: 'button',
-          title: t('title'),
-          onClick: props.open,
+          title: live ? `${t('title')} ${clock(remaining)}` : t('title'),
+          onClick: props.openSidebar,
           style: {
             ...buttonBase,
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '5px 10px 5px 8px',
-            borderRadius: 999,
+            width: 34, height: 34, padding: 0,
+            borderRadius: 9,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 14,
+            color: inWarn || inBreakWarn ? WARN : FG,
+          },
+        }, '⏱')
+      }
+
+      if (!state.panelOpen) {
+        return h('button', {
+          type: 'button',
+          title: t('expand'),
+          onClick: props.expand,
+          style: {
+            ...buttonBase,
+            width: '100%',
+            boxSizing: 'border-box',
+            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '6px 9px',
+            borderRadius: 9,
             background: CARD,
-            border: `0.5px solid ${inWarn || live ? accentColor : BORDER}`,
-            boxShadow: '0 4px 14px rgba(0,0,0,0.28)',
-            fontSize: 12,
+            border: `0.5px solid ${inWarn || inBreakWarn ? accentColor : BORDER}`,
+            textAlign: 'left',
           },
         },
-        h('span', { style: { fontSize: 13, lineHeight: '16px' } }, '⏱'),
-        h('span', { style: { fontVariantNumeric: 'tabular-nums' } }, live ? clock(remaining) : t('title'))))
+        h('span', { style: { fontSize: 13 } }, '⏱'),
+        h('span', {
+          style: {
+            flex: 1, minWidth: 0, fontSize: 12,
+            fontVariantNumeric: 'tabular-nums',
+            overflow: 'hidden', textOverflow: 'ellipsis',
+          },
+        }, live ? clock(remaining) : t('title')),
+        h('span', { style: { fontSize: 10.5, color: MUTED } }, phase === 'idle' ? t('idle') : label))
       }
 
       const actions = []
@@ -199,61 +229,56 @@ window.__ModuleLoader__.load({
         : phase === 'breakDone' ? t('breakDoneHint')
           : phase === 'idle' ? t('idleHint').replace('{w}', String(state.workMinutes || 40))
             : t('round').replace('{n}', String(state.round || 1))
-      const today = state.stats || { rounds: 0, focusMinutes: 0 }
-      const statsLine = t('stats')
-        .replace('{r}', String(today.rounds || 0))
-        .replace('{m}', String(today.focusMinutes || 0))
 
       return h('div', {
         style: {
-          position: 'fixed', right: 18, bottom: 96, zIndex: 70, pointerEvents: 'auto',
-          width: 216, boxSizing: 'border-box',
-          padding: '10px 12px 12px',
-          borderRadius: 12,
+          width: '100%',
+          boxSizing: 'border-box',
+          minWidth: 0,
+          padding: '8px 10px 9px',
+          borderRadius: 10,
           background: CARD,
-          backdropFilter: 'blur(26px) saturate(1.35)',
-          WebkitBackdropFilter: 'blur(26px) saturate(1.35)',
-          border: `0.5px solid ${inWarn || phase === 'break' ? accentColor : BORDER}`,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06)',
+          border: `0.5px solid ${inWarn || inBreakWarn ? accentColor : BORDER}`,
           color: FG,
           fontFamily: 'inherit',
         },
       },
       h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
-        h('span', { style: { fontSize: 12, fontWeight: 600, letterSpacing: 0.2 } }, t('title')),
+        h('span', { style: { fontSize: 11.5, fontWeight: 600, letterSpacing: 0.2 } }, t('title')),
         h('span', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
           state.online === false
             ? h('span', { title: t('offline'), style: { width: 6, height: 6, borderRadius: 6, background: '#e5484d' } })
             : null,
           h('button', {
             type: 'button', title: t('collapse'), onClick: props.close,
-            style: { ...buttonBase, border: 'none', padding: '2px 4px', color: MUTED, fontSize: 12 },
+            style: { ...buttonBase, border: 'none', padding: '1px 3px', color: MUTED, fontSize: 11.5 },
           }, '✕'))),
-      h('div', { style: { marginTop: 6, fontSize: 11, color: inWarn ? accentColor : MUTED, minHeight: 16 } }, label),
       h('div', {
         style: {
-          marginTop: 2, fontSize: 34, lineHeight: '40px', fontWeight: 600,
-          fontVariantNumeric: 'tabular-nums', letterSpacing: 0.5,
+          marginTop: 1, fontSize: 26, lineHeight: '32px', fontWeight: 600,
+          fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
           color: phase === 'breakDone' ? accentColor : FG,
         },
       }, timeText),
-      h('div', { style: { marginTop: 6, height: 3, borderRadius: 3, background: 'rgba(127,127,127,0.22)', overflow: 'hidden' } },
+      h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, minHeight: 16 } },
+        h('span', { style: { fontSize: 11, color: inWarn || inBreakWarn ? accentColor : MUTED } }, label),
+        h('span', { style: { fontSize: 10.5, color: MUTED, whiteSpace: 'nowrap' } }, hint)),
+      h('div', { style: { marginTop: 5, height: 3, borderRadius: 3, background: 'rgba(127,127,127,0.22)', overflow: 'hidden' } },
         h('div', { style: { height: '100%', width: `${Math.round(progress * 100)}%`, background: accentColor, transition: 'width 400ms linear' } })),
-      h('div', { style: { display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' } }, ...actions),
+      h('div', { style: { display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' } }, ...actions),
       state.online === false
-        ? h('div', { style: { marginTop: 8, fontSize: 11, color: '#e5484d', lineHeight: '16px' } }, `${t('offline')}${state.error ? ` · ${state.error}` : ''}`)
+        ? h('div', { style: { marginTop: 6, fontSize: 10.5, color: '#e5484d', lineHeight: '15px' } }, `${t('offline')}${state.error ? ` · ${state.error}` : ''}`)
         : null,
-      h('div', { style: { marginTop: 8, fontSize: 11, color: MUTED, lineHeight: '16px' } }, hint),
       h('div', {
         style: {
-          marginTop: 4, fontSize: 10.5, color: MUTED, lineHeight: '14px',
+          marginTop: 6, fontSize: 10.5, color: MUTED, lineHeight: '14px',
           fontVariantNumeric: 'tabular-nums', opacity: 0.9,
         },
       }, statsLine))
     }
 
     return {
-      inject: ['slots', 'locale', 'connection'],
+      inject: ['slots', 'locale', 'connection', 'layout'],
       apply(ctx) {
         ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'sit-alarm: copy')
 
@@ -310,16 +335,17 @@ window.__ModuleLoader__.load({
         const polling = setInterval(() => { void poll() }, POLL_MS)
         ctx.effect(() => () => { clearInterval(polling) }, 'sit-alarm: polling')
 
-        ctx.slots.inject('shell.overlay', () => ctx.slots.register({
-          name: 'shell.overlay',
+        ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({
+          name: 'sidebar.footer.action',
           id: 'sit-alarm',
           locale: NS,
-          order: 40,
+          order: 10,
           inject: () => ({
             hooks: { sit: store },
             act,
-            open: () => store.patch({ panelOpen: true }),
+            expand: () => store.patch({ panelOpen: true }),
             close: () => store.patch({ panelOpen: false }),
+            openSidebar: () => ctx.layout.toggleSidebar(),
           }),
         }, Panel))
       },

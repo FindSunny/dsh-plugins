@@ -22,14 +22,14 @@ https://raw.githubusercontent.com/FindSunny/dsh-plugins/main/market/index.json
 
 ## 使用
 
-点右下角小圆片展开面板 →「开始 40 分钟」。之后：
+卡片在左侧边栏底部、用户名上方（和工作区不抢地方）。点「开始 40 分钟」，之后：
 
-- 第 37 分钟：提醒准备站起来（面板自动展开变色）
+- 第 37 分钟：提醒准备站起来（卡片自动展开变色）
 - 第 40 分钟：自动进入 5 分钟休息
 - 第 44 分钟：预告休息快结束
 - 第 45 分钟：休息达标提示，**不自动开始**，点「开始下一轮」才继续
 
-面板可收起成小圆片；底部一行是今天的统计：`今日 N 轮 · 专注 M 分`。
+卡片可收起成一行摘要；侧栏折成 rail 时显示 ⏱ 按钮。底部一行是今天的统计：`今日 N 轮 · 专注 M 分`。
 
 ## 配置
 
@@ -49,5 +49,5 @@ https://raw.githubusercontent.com/FindSunny/dsh-plugins/main/market/index.json
 ## 开发
 
 - `index.js`：Host 状态机、吐司、统计、`/api/sit-alarm` 精确路由（`state` / `command`）
-- `client.js`：`shell.overlay` 里的浮动面板，2 秒轮询一次状态
+- `client.js`：注册在 `sidebar.footer.action` 的侧栏卡片，2 秒轮询一次状态
 - 改 Host 代码：插件管理里关掉再打开即可重新加载；改 Client 代码需要刷新页面
