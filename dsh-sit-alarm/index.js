@@ -41,9 +41,9 @@ function dayKey(date = new Date()) {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
 }
 
-/** 一天的空统计。 */
+/** 一天的空统计。log 存每一轮的明细，用来事后找节奏。 */
 function emptyDay() {
-  return { rounds: 0, focusSeconds: 0, breaks: 0, breakSeconds: 0, skips: 0 }
+  return { rounds: 0, focusSeconds: 0, breaks: 0, breakSeconds: 0, skips: 0, log: [] }
 }
 
 /** 四舍五入到毫秒，同时挡住 NaN。 */
@@ -169,6 +169,10 @@ export function apply(ctx) {
   let breakMs = 0
   /** 当前这一段（专注或休息）的起始时刻，用于累计毫秒。 */
   let segmentStart = 0
+  /** 最近一条「已完成专注」的明细，用来补 gapSec / bSec。 */
+  let roundEntry = null
+  /** 本轮专注跑完的时刻，用来算「隔了多久才去休息」。 */
+  let workEndAt = 0
   let timer
 
   const log = (...args) => {
@@ -181,14 +185,21 @@ export function apply(ctx) {
     return day && typeof day === 'object' ? day : emptyDay()
   }
 
-  /** 往今天的统计上累加，落盘。 */
-  function bumpToday(patch) {
+  /** 今天这一格统计（可写，缺字段补齐）。 */
+  function ensureDay() {
     const key = dayKey()
     const day = stats.days[key] && typeof stats.days[key] === 'object' ? stats.days[key] : emptyDay()
-    for (const [field, value] of Object.entries(patch)) day[field] = (Number(day[field]) || 0) + value
+    if (!Array.isArray(day.log)) day.log = []
     stats.days[key] = day
+    return day
+  }
+
+  /** 往今天的统计上累加，落盘。 */
+  function bumpToday(patch) {
+    const day = ensureDay()
+    for (const [field, value] of Object.entries(patch)) day[field] = (Number(day[field]) || 0) + value
     saveStats(stats)
-    debug(`stats ${key} ${JSON.stringify(day)}`)
+    debug(`stats ${dayKey()} ${JSON.stringify({ ...day, log: day.log.length })}`)
     return day
   }
 
@@ -260,10 +271,16 @@ export function apply(ctx) {
   function flushBreak(completed) {
     if (phase === 'break') breakMs += Math.max(0, Date.now() - segmentStart)
     if (breakMs <= 0) return
+    const seconds = Math.round(breakMs / 1000)
     bumpToday({
-      breakSeconds: Math.round(breakMs / 1000),
+      breakSeconds: seconds,
       ...completed ? { breaks: 1 } : { skips: 1 },
     })
+    if (roundEntry !== null && roundEntry.bSec === null) {
+      roundEntry.bSec = seconds
+      roundEntry.bDone = completed
+      saveStats(stats)
+    }
     breakMs = 0
   }
 
@@ -271,11 +288,19 @@ export function apply(ctx) {
   function finishWork() {
     clearTimer()
     focusMs += Math.max(0, Date.now() - segmentStart)
-    bumpToday({ rounds: 1, focusSeconds: Math.round(focusMs / 1000) })
+    const focusSeconds = Math.round(focusMs / 1000)
     focusMs = 0
     phase = 'workDone'
     endsAt = 0
     warnAt = 0
+    workEndAt = Date.now()
+    bumpToday({ rounds: 1, focusSeconds })
+    const day = ensureDay()
+    const entry = { at: workEndAt, w: cfg.workMinutes, f: focusSeconds, gapSec: null, bSec: null, bDone: false }
+    day.log.push(entry)
+    if (day.log.length > 120) day.log.shift()
+    saveStats(stats)
+    roundEntry = entry
     notify(`专注 ${Math.round(cfg.workMinutes)} 分钟完成`, `点「开始休息」进入 ${Math.round(cfg.breakMinutes)} 分钟休息。`)
   }
 
@@ -288,6 +313,11 @@ export function apply(ctx) {
     breakWarned = false
     breakMs = 0
     segmentStart = startedAt
+    // 「专注跑完」到「真的去休息」隔了多久，把这段时间也记下来。
+    if (roundEntry !== null && roundEntry.gapSec === null) {
+      roundEntry.gapSec = Math.max(0, Math.round((startedAt - workEndAt) / 1000))
+      saveStats(stats)
+    }
     notify(`休息 ${Math.round(cfg.breakMinutes)} 分钟`, '站起来走两步、拉伸肩颈，倒计时结束会再提醒你。')
     scheduleNext()
   }
