@@ -5,8 +5,8 @@
     "zh": "索剑飞的 DSH 插件"
   },
   "description": {
-    "en": "Hand-made DeepSeek Harness plugins: Windows desktop notifications and a theme.",
-    "zh": "自己做的 DSH 插件：Windows 桌面通知、主题。"
+    "en": "Hand-made DeepSeek Harness plugins: Windows desktop notifications, a sit reminder with a countdown panel, and themes.",
+    "zh": "自己做的 DSH 插件：Windows 桌面通知、久坐提醒倒计时面板、主题。"
   },
   "metadata": {
     "categories": {
@@ -14,6 +14,12 @@
         "title": {
           "en": "Notifications",
           "zh": "通知"
+        }
+      },
+      "health": {
+        "title": {
+          "en": "Health",
+          "zh": "健康"
         }
       },
       "theme": {
@@ -70,8 +76,52 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "5fb5077a804a46a94c624886154c20a670b8a395",
+            "commit": "806f36c3be2e766416be00a39ef26c1cfb22fd1d",
             "path": "dsh-notify"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dsh-sit-alarm",
+      "title": {
+        "en": "Sit reminder",
+        "zh": "久坐提醒"
+      },
+      "description": {
+        "en": "40-minute focus rounds with a 5-minute break: a floating countdown panel, a heads-up at minute 37, automatic break timing, and desktop toasts. The next round never starts on its own.",
+        "zh": "40 分钟专注 + 5 分钟活动：浮动倒计时面板，第 37 分钟提醒准备站起，休息结束只提示、不自动开始下一轮，全程桌面吐司。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlNpdCByZW1pbmRlciI+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iMTQiIGZpbGw9IiMyYjNhNjciLz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI5IiByPSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZThlZWZjIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8cGF0aCBkPSJNMzIgMjB2OWw2LjUgNSIgc3Ryb2tlPSIjN2FhMmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IHg9IjE5IiB5PSI1MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjMuMiIgcng9IjEuNiIgZmlsbD0iIzdhYTJmZiIvPgo8L3N2Zz4K",
+      "author": "Suo Jianfei",
+      "homepage": "https://github.com/FindSunny/dsh-plugins/tree/main/dsh-sit-alarm",
+      "repository": {
+        "url": "https://github.com/FindSunny/dsh-plugins",
+        "directory": "dsh-sit-alarm"
+      },
+      "metadata": {
+        "category": "health",
+        "keywords": [
+          "sit",
+          "reminder",
+          "countdown",
+          "break",
+          "pomodoro",
+          "desktop"
+        ],
+        "labels": [
+          "windows"
+        ]
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794706855,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/FindSunny/dsh-plugins",
+            "commit": "806f36c3be2e766416be00a39ef26c1cfb22fd1d",
+            "path": "dsh-sit-alarm"
           }
         }
       ]
@@ -107,7 +157,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "5fb5077a804a46a94c624886154c20a670b8a395",
+            "commit": "806f36c3be2e766416be00a39ef26c1cfb22fd1d",
             "path": "dsh-theme-mao"
           }
         }
@@ -146,7 +196,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/FindSunny/dsh-plugins",
-            "commit": "5fb5077a804a46a94c624886154c20a670b8a395",
+            "commit": "806f36c3be2e766416be00a39ef26c1cfb22fd1d",
             "path": "dsh-theme-lingcage-maiduo"
           }
         }
